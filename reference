@@ -1,0 +1,70 @@
+post /advisor/register
+    {Client}
+
+post /advisor/edit
+    {cpf}
+
+post /advisor/delete
+    {cpf}
+
+post /advisor/
+    {cpf}
+
+post /get_metrics/
+    {start_date, end_date, metrics, products}
+    start_date/end_date = aaaa-mm-dd
+    metrics = ["drawdown", "returns" ...]
+    products = [{name: proportion}, {name: proportion}]
+
+get /products
+
+get /product/{ticker}
+
+
+Client
+    id
+    name
+    cpf
+    email
+    celular
+    rua
+    bairro
+    complemento
+    cidade
+    estado
+    cep
+    obs
+    user
+    password
+
+
+Advisor
+    id
+    name
+    cpf
+    email
+    rua
+    bairro
+    complemento
+    cidade
+    estado
+    cep
+    birth
+    cel
+    salary
+    work_code
+    cvm_code
+    user
+    password
+
+Portfolio
+    id      PKEY
+    Client - id
+    Advisor - id
+
+Product
+    name      - PKEY
+    Portfolio - SKEY
+    proportion
+
+
