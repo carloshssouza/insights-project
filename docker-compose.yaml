@@ -1,0 +1,48 @@
+version: "3.8"
+
+services:
+    redis_db:
+        container_name: redis_db
+        command: bash -c "redis-server --appendonly yes"
+        image: redis
+        ports:
+            - "6379:6379"
+        volumes:
+            - ./redis-volume:/data
+
+    postgres_db:
+        image: postgres
+        environment:
+            POSTGRES_PASSWORD: "senha_trabalho_unifei"
+        ports:
+            - "15432:5432"
+        volumes:
+            - ./postgres-volume:/data
+        networks:
+            - microservices
+
+    pgadmin:
+        image: dpage/pgadmin4
+        environment:
+            PGADMIN_DEFAULT_EMAIL: "lucasblazzi@hotmail.com"
+            PGADMIN_DEFAULT_PASSWORD: "senha_trabalho_unifei"
+        ports:
+            - "16543:80"
+        depends_on:
+            - postgres_db
+        networks:
+            - microservices
+
+    api:
+        build:
+            context: .
+            dockerfile: api/Dockerfile
+        image: api
+        networks:
+            - microservices
+        ports:
+            - 5000:5000
+
+networks:
+    microservices:
+        driver: bridge
