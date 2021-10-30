@@ -12,4 +12,4 @@ ENV FLASK_APP=app.py
 ENV APP_SETTINGS="config.DevelopmentConfig"
 ENV DATABASE_URL="postgresql://postgres:senha_trabalho_unifei@postgres_db/insights"
 
-ENTRYPOINT [ "flask", "run", "--host=0.0.0.0"]
+ENTRYPOINT ["flask", "run", "--host=0.0.0.0"]
