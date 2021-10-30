@@ -33,7 +33,7 @@ services:
         networks:
             - microservices
 
-    api:
+    api_service:
         build:
             context: .
             dockerfile: api/Dockerfile
@@ -42,6 +42,7 @@ services:
             - microservices
         ports:
             - 5000:5000
+
 
 networks:
     microservices:

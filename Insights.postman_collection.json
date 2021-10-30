@@ -1,0 +1,244 @@
+{
+	"info": {
+		"_postman_id": "26e17f9a-4380-4a42-9e7f-e37e85def4ae",
+		"name": "Insights",
+		"schema": "https://schema.getpostman.com/json/collection/v2.1.0/collection.json"
+	},
+	"item": [
+		{
+			"name": "Client - List",
+			"request": {
+				"method": "GET",
+				"header": [],
+				"url": {
+					"raw": "localhost:5000/clients",
+					"host": [
+						"localhost"
+					],
+					"port": "5000",
+					"path": [
+						"clients"
+					]
+				}
+			},
+			"response": []
+		},
+		{
+			"name": "Client - Create",
+			"request": {
+				"method": "POST",
+				"header": [],
+				"body": {
+					"mode": "raw",
+					"raw": "{\r\n            \"cpf\": \"self.cpf\",\r\n            \"name\": \"self.name\",\r\n            \"username\": \"self.username\",\r\n            \"password\": \"self.password\",\r\n            \"email\": \"self.email\",\r\n            \"suitability\": \"self.suitability\",\r\n            \"cel\": \"self.cel\",\r\n            \"address\": \"self.address\",\r\n            \"city\": \"self.city\",\r\n            \"state\": \"self.state\",\r\n            \"status\": 1,\r\n            \"complement\": \"self.complement\",\r\n            \"zip_code\": \"self.zip_code\",\r\n            \"obs\": \"self.obs\"\r\n        }",
+					"options": {
+						"raw": {
+							"language": "json"
+						}
+					}
+				},
+				"url": {
+					"raw": "localhost:5000/client/create",
+					"host": [
+						"localhost"
+					],
+					"port": "5000",
+					"path": [
+						"client",
+						"create"
+					]
+				}
+			},
+			"response": []
+		},
+		{
+			"name": "Client - Read",
+			"request": {
+				"method": "GET",
+				"header": [],
+				"url": {
+					"raw": "localhost:5000/client/1",
+					"host": [
+						"localhost"
+					],
+					"port": "5000",
+					"path": [
+						"client",
+						"1"
+					]
+				}
+			},
+			"response": []
+		},
+		{
+			"name": "Client - Update",
+			"request": {
+				"method": "POST",
+				"header": [],
+				"body": {
+					"mode": "raw",
+					"raw": "{\r\n    \"cpf\": \"updated\",\r\n    \"name\": \"self.name.updated\",\r\n    \"username\": \"updated\"\r\n}",
+					"options": {
+						"raw": {
+							"language": "json"
+						}
+					}
+				},
+				"url": {
+					"raw": "localhost:5000/client/update/1",
+					"host": [
+						"localhost"
+					],
+					"port": "5000",
+					"path": [
+						"client",
+						"update",
+						"1"
+					]
+				}
+			},
+			"response": []
+		},
+		{
+			"name": "Client - Delete",
+			"request": {
+				"method": "GET",
+				"header": [],
+				"url": {
+					"raw": "localhost:5000/client/delete/1",
+					"host": [
+						"localhost"
+					],
+					"port": "5000",
+					"path": [
+						"client",
+						"delete",
+						"1"
+					]
+				}
+			},
+			"response": []
+		},
+		{
+			"name": "Advisor - List",
+			"protocolProfileBehavior": {
+				"disableBodyPruning": true
+			},
+			"request": {
+				"method": "GET",
+				"header": [],
+				"body": {
+					"mode": "file",
+					"file": {}
+				},
+				"url": {
+					"raw": "localhost:5000/advisors",
+					"host": [
+						"localhost"
+					],
+					"port": "5000",
+					"path": [
+						"advisors"
+					]
+				}
+			},
+			"response": []
+		},
+		{
+			"name": "Advisor - Create",
+			"request": {
+				"method": "POST",
+				"header": [],
+				"body": {
+					"mode": "raw",
+					"raw": "{\r\n    \"cpf\": \"self.cpf\",\r\n    \"name\": \"self.name\",\r\n    \"username\": \"self.username\",\r\n    \"password\": \"self.password\",\r\n    \"email\": \"self.email\",\r\n    \"cel\": \"self.cel\",\r\n    \"address\": \"self.address\",\r\n    \"city\": \"self.city\",\r\n    \"state\": \"self.state\",\r\n    \"status\": 1,\r\n    \"complement\": \"self.complement\",\r\n    \"zip_code\": \"self.zip_code\",\r\n    \"obs\": \"self.obs\",\r\n    \"birth\": \"self.birth\",\r\n    \"salary\": 12341.42,\r\n    \"work_code\": 412561,\r\n    \"cvm_code\": \"self.cvm_code\"\r\n}",
+					"options": {
+						"raw": {
+							"language": "json"
+						}
+					}
+				},
+				"url": {
+					"raw": "localhost:5000/advisor/create",
+					"host": [
+						"localhost"
+					],
+					"port": "5000",
+					"path": [
+						"advisor",
+						"create"
+					]
+				}
+			},
+			"response": []
+		},
+		{
+			"name": "Advisor - Read",
+			"request": {
+				"method": "GET",
+				"header": [],
+				"url": {
+					"raw": "localhost:5000/advisor/1",
+					"host": [
+						"localhost"
+					],
+					"port": "5000",
+					"path": [
+						"advisor",
+						"1"
+					]
+				}
+			},
+			"response": []
+		},
+		{
+			"name": "Advisor - Update",
+			"request": {
+				"method": "POST",
+				"header": [],
+				"body": {
+					"mode": "raw",
+					"raw": "{\r\n    \"name\": \"self.name.update\",\r\n    \"salary\": 141512.42\r\n}",
+					"options": {
+						"raw": {
+							"language": "json"
+						}
+					}
+				},
+				"url": {
+					"raw": "localhost:5000/advisor/update/1",
+					"host": [
+						"localhost"
+					],
+					"port": "5000",
+					"path": [
+						"advisor",
+						"update",
+						"1"
+					]
+				}
+			},
+			"response": []
+		},
+		{
+			"name": "Advisor - Delete",
+			"request": {
+				"method": "GET",
+				"header": [],
+				"url": {
+					"raw": "localhost:5000/advisor/delete/1",
+					"host": [
+						"localhost"
+					],
+					"port": "5000",
+					"path": [
+						"advisor",
+						"delete",
+						"1"
+					]
+				}
+			},
+			"response": []
+		}
+	]
+}
