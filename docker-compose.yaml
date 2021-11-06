@@ -17,7 +17,7 @@ services:
         ports:
             - "15432:5432"
         volumes:
-            - ./postgres-volume:/data
+            - ./postgres-volume:/var/lib/postgresql/data
         networks:
             - microservices
 
@@ -36,7 +36,7 @@ services:
     api_service:
         build:
             context: .
-            dockerfile: api/Dockerfile
+            dockerfile: advisor/Dockerfile
         image: api
         networks:
             - microservices
