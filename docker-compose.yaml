@@ -36,7 +36,7 @@ services:
     api_service:
         build:
             context: .
-            dockerfile: api/Dockerfile
+            dockerfile: advisor/Dockerfile
         image: api
         networks:
             - microservices
