@@ -33,16 +33,35 @@ services:
         networks:
             - microservices
 
-    api_service:
+    client_service:
         build:
             context: .
-            dockerfile: advisor/Dockerfile
-        image: api
+            dockerfile: client/Dockerfile
+        image: client
         networks:
             - microservices
         ports:
-            - 5000:5000
+            - 6001:6001
 
+    advisor_service:
+        build:
+            context: .
+            dockerfile: advisor/Dockerfile
+        image: advisor
+        networks:
+            - microservices
+        ports:
+            - 6002:6002
+
+    assets_service:
+        build:
+            context: .
+            dockerfile: assets/Dockerfile
+        image: assets
+        networks:
+            - microservices
+        ports:
+            - 6003:6003
 
 networks:
     microservices:
