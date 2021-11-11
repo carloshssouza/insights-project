@@ -56,6 +56,7 @@ def symbols():
 
 
 # print(r.client.keys())
-print(get_symbols(["ITSA4.SA"], "historic"))
+print(get_symbols(["ITSA4.SA"], "historic").get("ITSA4.SA"))
+x = 0
 # load_symbols(symbols=symbols(), _type="info")
 #load_symbols(symbols=symbols(), _type="historic")
