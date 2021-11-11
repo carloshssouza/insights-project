@@ -1,6 +1,6 @@
 {
 	"info": {
-		"_postman_id": "26e17f9a-4380-4a42-9e7f-e37e85def4ae",
+		"_postman_id": "493e9c7c-a5c7-428f-b1a5-89ca2aa1a273",
 		"name": "Insights",
 		"schema": "https://schema.getpostman.com/json/collection/v2.1.0/collection.json"
 	},
@@ -237,6 +237,33 @@
 						"1"
 					]
 				}
+			},
+			"response": []
+		},
+		{
+			"name": "Assets - List",
+			"request": {
+				"method": "GET",
+				"header": [],
+				"url": null
+			},
+			"response": []
+		},
+		{
+			"name": "Assets - Info",
+			"request": {
+				"method": "GET",
+				"header": [],
+				"url": null
+			},
+			"response": []
+		},
+		{
+			"name": "Assets - Historic",
+			"request": {
+				"method": "GET",
+				"header": [],
+				"url": null
 			},
 			"response": []
 		}

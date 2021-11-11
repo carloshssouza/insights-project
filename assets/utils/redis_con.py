@@ -5,7 +5,7 @@ import pandas as pd
 
 class CoincideRedis:
     def __init__(self):
-        self.client = redis.Redis(host="localhost", port=6379)
+        self.client = redis.Redis(host="redis_db", port=6379)
 
     def set_parquet(self, key, df):
         buffer = BytesIO()

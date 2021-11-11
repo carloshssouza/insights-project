@@ -1,10 +1,11 @@
 import os
 from flask import Flask, request, jsonify
+from data import get_assets, list_assets
+
 
 app = Flask(__name__)
 app.config.from_object(os.environ["APP_SETTINGS"])
-
-from utils.data import get_assets, list_assets
+app.config["SQLALCHEMY_TRACK_MODIFICATIONS"] = False
 
 
 @app.route("/")

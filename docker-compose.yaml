@@ -9,6 +9,8 @@ services:
             - "6379:6379"
         volumes:
             - ./redis-volume:/data
+        networks:
+            - microservices
 
     postgres_db:
         image: postgres
@@ -41,7 +43,7 @@ services:
         networks:
             - microservices
         ports:
-            - 6001:6001
+            - 5001:5001
 
     advisor_service:
         build:
@@ -51,7 +53,7 @@ services:
         networks:
             - microservices
         ports:
-            - 6002:6002
+            - 5002:5002
 
     assets_service:
         build:
@@ -61,7 +63,7 @@ services:
         networks:
             - microservices
         ports:
-            - 6003:6003
+            - 5003:5003
 
 networks:
     microservices:
