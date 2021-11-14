@@ -1,0 +1,92 @@
+syntax = "proto3";
+
+message Void {}
+
+service Metrics {
+    rpc GetMetrics(MetricsRequest) returns (MetricsResponse);
+    rpc GetPortfolioMetrics(PortfolioRequest) returns (PortfolioResponse);
+}
+
+message Metric {
+    string name = 1;
+    float value = 2;
+}
+
+message SerieValue {
+    string date = 1;
+    string value = 2;
+}
+
+message Serie {
+    string name = 1;
+    repeated SerieValue values = 2;
+}
+
+message MetricsResponse {
+    string name = 1;
+    repeated Metric metrics = 2;
+}
+
+message MetricsRequest {
+    string base_date = 1;
+    string ticker = 2;
+}
+
+message Product {
+    string id = 1;
+    float proportion = 2;
+    float amount = 3;
+}
+
+message ComposedMetrics {
+    repeated Metric simple = 1;
+    repeated Serie series = 2;
+}
+
+message PortfolioResponse {
+    ComposedMetrics products = 1;
+    ComposedMetrics portfolio = 2;
+}
+
+message PortfolioRequest {
+    repeated Product products = 1;
+    string start_date = 2;
+    string end_date = 3;
+    float amount = 4;
+}
+
+message RawPriceResponse {
+    string raw = 1;
+}
+
+service Info {
+    rpc GetInfo(InfoRequest) returns (InfoResponse);
+    rpc GetPrices(PricesRequest) returns (RawPriceResponse);
+}
+
+message PricesRequest {
+    repeated string tickers = 1;
+    string start_date = 2;
+    string end_date = 3;
+}
+
+message Value {
+    string date = 1;
+    float value = 2;
+}
+
+message InfoRequest {
+    string ticker = 1;
+    string start_date = 2;
+    string end_date = 3;
+}
+
+message InfoResponse {
+    string name = 1;
+    repeated Value prices = 2;
+    repeated Value volumes = 3;
+    repeated Value dividends = 4;
+}
+
+
+

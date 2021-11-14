@@ -2,6 +2,7 @@ FROM python
 
 RUN mkdir /service
 COPY api/assets/ /service/assets/
+COPY api/config.py /service/assets/config.py
 
 WORKDIR /service/assets
 RUN python -m pip install --upgrade pip

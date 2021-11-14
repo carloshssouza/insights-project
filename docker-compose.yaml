@@ -69,11 +69,50 @@ services:
         build:
             context: .
             dockerfile: api/portfolio/Dockerfile
+        environment:
+            METRICS_HOST: metrics_service
+            METRICS_PORT: 9999
         image: portfolio
         networks:
             - insights-network
         ports:
             - 5004:5004
+
+    prices_service:
+        build:
+            context: .
+            dockerfile: prices/Dockerfile
+        image: prices
+        networks:
+            - insights-network
+        ports:
+            - 8888:8888
+
+    metrics_service:
+        build:
+            context: .
+            dockerfile: metrics/Dockerfile
+        environment:
+            PRICES_HOST: prices_service
+        image: metrics
+        networks:
+            - insights-network
+        ports:
+            - 9999:9999
+
+    prometheus:
+        image: prom/prometheus:v2.21.0
+        ports:
+          - 9000:9090
+        volumes:
+          - ./prometheus:/etc/prometheus
+          - prometheus-volume:/prometheus
+        command: --web.enable-lifecycle  --config.file=/etc/prometheus/prometheus.yml
+
+volumes:
+    redis-volume:
+    postgres-volume:
+    prometheus-volume:
 
 networks:
     insights-network:

@@ -1,16 +1,14 @@
 import os
 import grpc
 from concurrent import futures
-from datetime import datetime
-
+import json
 import pandas as pd
 import yfinance as yf
 
-from coincide_pb2 import InfoResponse
-import coincide_pb2_grpc as grpc_service
+from insights_pb2 import InfoResponse, RawPriceResponse
+import insights_pb2_grpc as grpc_service
 
 
-prices_host = os.environ.get("PRICES_HOST", "localhost")
 prices_port = os.environ.get("PRICES_PORT", "8888")
 
 
@@ -31,13 +29,11 @@ def get_info(ticker):
 
 def simple_historical(symbols, start_date, end_date):
     adj_close = pd.DataFrame()
-    session = requests_cache.CachedSession('yfinance.cache')
-    session.headers['User-agent'] = 'insights/1.0'
     for symbol in symbols:
-        ticker = yf.Ticker(symbol, session=session)
+        ticker = yf.Ticker(symbol)
         hist = ticker.history(start=start_date, end=end_date)
         adj_close[symbol] = hist["Close"]
-    return adj_close.to_dict(orient=records)
+    return adj_close.to_dict(orient="records")
 
 
 def multi_builder(name, pbuff_obj, series):
@@ -61,10 +57,10 @@ def response_builder(name, series):
 def server_setup():
     server = grpc.server(futures.ThreadPoolExecutor(max_workers=10))
     grpc_service.add_InfoServicer_to_server(InfoServicer(), server)
-    server.add_insecure_port(f"{prices_host}:{prices_port}")
+    server.add_insecure_port(f"prices_service:{prices_port}")
     try:
         server.start()
-        print(f"Server is running on {prices_host}:{prices_port}")
+        print(f"Server is running on prices_service:{prices_port}")
         server.wait_for_termination()
     except KeyboardInterrupt:
         print("Stopping prices service")
@@ -84,7 +80,10 @@ class InfoServicer(grpc_service.InfoServicer):
     def GetPrices(self, request, context):
         records = simple_historical(request.tickers, request.start_date, request.end_date)
         result = json.dumps(records)
-        return result
+        prices_response = RawPriceResponse()
+        prices_response.raw = result
+        return prices_response
+
 
 if __name__ == "__main__":
     print(f"Starting prices server on port {prices_port}")

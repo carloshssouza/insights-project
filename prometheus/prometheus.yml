@@ -1,0 +1,18 @@
+global:
+  scrape_interval: 30s
+  scrape_timeout: 10s
+
+rule_files:
+  - alert.yml
+
+scrape_configs:
+  - job_name: services
+    metrics_path: /metrics
+    static_configs:
+      - targets:
+          - 'prometheus:9090'
+          - 'client_service:5001'
+          - 'advisor_service:5002'
+          - 'assets_service:5003'
+          - 'portfolio_service:5004'
+

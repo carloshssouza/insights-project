@@ -4,29 +4,29 @@ def build_dashboard(products, portfolio, close):
     return {
         "products": {
             "series": [
-                {"Cumulative Return": products.cumulative_returns().to_dict(orient="records")},
-                {"Drawdown": products.drawdown().to_dict(orient="records")},
-                {"Wealth Index": products.wealth_index().to_dict(orient="records")},
-                {"Return": products.returns().to_dict(orient="records")},
-                {"Correlation": products.correlation().to_dict(orient="records")},
+                {"name": "Cumulative Return", "values": products.cumulative_returns().to_dict(orient="records")},
+                {"name": "Drawdown", "values": products.drawdown().to_dict(orient="records")},
+                {"name": "Wealth Index", "values": products.wealth_index().to_dict(orient="records")},
+                {"name": "Return", "values": products.returns().to_dict(orient="records")},
+                {"name": "Correlation", "values": products.correlation().to_dict(orient="records")},
             ],
             "simple": []
         },
         "portfolio": {
             "series": [
-                {"Cumulative Return": portfolio.cumulative_returns().to_dict(orient="records")},
-                {"Wealth Index": portfolio.wealth_index().to_dict(orient="records")},
-                {"Return": portfolio.returns().to_dict(orient="records")},
-                {"Drawdown": portfolio.drawdown().to_dict(orient="records")},
-                {"Drawdown": portfolio.drawdown().to_dict(orient="records")},
+                {"name": "Cumulative Return", "values": portfolio.cumulative_returns().to_dict(orient="records")},
+                {"name": "Wealth Index", "values": portfolio.wealth_index().to_dict(orient="records")},
+                {"name": "Return", "values": portfolio.returns().to_dict(orient="records")},
+                {"name": "Drawdown", "values": portfolio.drawdown().to_dict(orient="records")},
+                {"name": "Drawdown", "values": portfolio.drawdown().to_dict(orient="records")},
             ],
             "simple": [
-                {"Total Return": portfolio.total_returns()},
-                {"Volatility": portfolio.volatility()},
-                {"Maximum Drawdown": portfolio.min()},
-                {"Annualized Return": portfolio.annualized_returns()},
-                {"Annualized Volatility": portfolio.annualized_volatility()},
-                {"Sharpe": portfolio.sharpe()},
+                {"name": "Total Return", "value": portfolio.total_returns()},
+                {"name": "Volatility", "value": portfolio.volatility()},
+                {"name": "Maximum Drawdown", "value": portfolio.min()},
+                {"name": "Annualized Return", "value": portfolio.annualized_returns()},
+                {"name": "Annualized Volatility", "value": portfolio.annualized_volatility()},
+                {"name": "Sharpe", "value": portfolio.sharpe()},
             ]
         },
     }

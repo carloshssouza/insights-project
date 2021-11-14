@@ -1,6 +1,6 @@
 import pandas as pd
-from utils.redis_con import CoincideRedis
 
+from redis_con import CoincideRedis
 
 r = CoincideRedis()
 

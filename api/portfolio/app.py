@@ -11,7 +11,7 @@ app.config["SQLALCHEMY_TRACK_MODIFICATIONS"] = False
 db = SQLAlchemy(app)
 
 from model import Portfolio, Product, Client
-#from portfolio.get_metrics import get_portfolio_metrics
+from get_metrics import get_portfolio_metrics
 
 
 @app.route("/")
@@ -100,18 +100,28 @@ def product_add():
         return str(e)
 
 
-@app.route("/portfolio/metrics", method=["POST"])
-def portfolio_get_by_id():
+@app.route("/portfolio/metrics", methods=["POST"])
+@cross_origin()
+def portfolio_metrics():
     try:
         product_input = request.get_json()
+        amount = 0
+        products = list()
         portfolio = Portfolio.query.filter_by(id=product_input["id"]).first()
-        products = [p.serialize() for p in portfolio.products]
+        for p in portfolio.products:
+            _p = p.serialize()
+            _p.pop("portfolio_id", None)
+            amount += _p.get("amount", 0)
+            products.append(_p)
+        print(products)
         metrics = get_portfolio_metrics({"start_date": product_input["end_date"],
                                          "end_date": product_input["end_date"],
+                                         "amount": amount,
                                          "products": products})
         return metrics
     except Exception as e:
         return str(e)
+
 
 if __name__ == "__main__":
     app.run()
