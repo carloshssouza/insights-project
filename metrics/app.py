@@ -4,6 +4,7 @@ import pandas as pd
 from concurrent import futures
 from datetime import datetime
 from dateutil.relativedelta import relativedelta
+import numpy as np
 
 from google.protobuf.json_format import MessageToDict
 import coincide_pb2_grpc as grpc_service
@@ -11,6 +12,8 @@ from coincide_pb2_grpc import InfoStub
 from coincide_pb2 import InfoRequest, MetricsResponse
 
 from utils.product_metrics import Metrics
+from utils.metrics import Product, Portfolio
+from utils.dashboard import build_dashboard
 
 
 prices_host = os.environ.get("PRICES_HOST", "localhost")
@@ -35,6 +38,18 @@ def get_prices(request):
             return prices
     except Exception as e:
         raise e
+
+
+def get_multiple_prices(request):
+    try:
+        with grpc.insecure_channel(f"{prices_host}:{prices_port}") as channel:
+            stub = InfoStub(channel)
+            request = InfoRequest(request)
+            prices = stub.GetPrices(request)
+            return prices
+    except Exception as e:
+        raise e
+
 
 def response_builder(metrics, name):
     _metrics = MetricsResponse()
@@ -98,15 +113,15 @@ class MetricsServicer(grpc_service.MetricsServicer):
             return MetricsResponse()
 
     def GetPortfolioMetrics(self, request, context):
-        data = get_prices(request)
-        if data.ByteSize():
-            df = compose_df(data)
-            if df.empty:
-                return MetricsResponse()
-            metrics = Metrics(request).get_metrics(df)
-            return response_builder(metrics, data.name)
-        else:
-            return MetricsResponse()
+        products = request["products"]
+        _ids = [p["id"] for p in products]
+        data = get_multiple_prices({"tickers": _ids, "start_date": request.start_date, "end_date": request.end_date})
+        close = pd.DataFrame(json.loads(data))
+        weights = np.array([p["proportion"] for p in products])
+        values = np.array([p["amount"] for p in products])
+        products = Product(close, values)
+        portfolio = Portfolio(close, weights, [sum(values)])
+        dash = build_dashboard(products, portfolio, close)
 
 
 if __name__ == "__main__":

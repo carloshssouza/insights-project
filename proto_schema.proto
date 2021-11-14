@@ -33,8 +33,9 @@ message MetricsRequest {
 }
 
 message Product {
-    string ticker = 1;
-    string proportion = 2;
+    string id = 1;
+    float proportion = 2;
+    float amount = 3;
 }
 
 message PortfolioResponse {
@@ -53,6 +54,13 @@ message PortfolioRequest {
 
 service Info {
     rpc GetInfo(InfoRequest) returns (InfoResponse);
+    rpc GetPrices(PricesRequest) returns (string);
+}
+
+message PricesRequest {
+    repeated string tickers = 1;
+    string start_date = 2;
+    string end_date = 3;
 }
 
 message Value {

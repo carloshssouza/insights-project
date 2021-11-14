@@ -10,7 +10,7 @@ services:
         volumes:
             - ./redis-volume:/data
         networks:
-            - microservices
+            - insights-network
 
     postgres_db:
         image: postgres
@@ -21,7 +21,7 @@ services:
         volumes:
             - ./postgres-volume:/var/lib/postgresql/data
         networks:
-            - microservices
+            - insights-network
 
     pgadmin:
         image: dpage/pgadmin4
@@ -33,38 +33,48 @@ services:
         depends_on:
             - postgres_db
         networks:
-            - microservices
+            - insights-network
 
     client_service:
         build:
             context: .
-            dockerfile: client/Dockerfile
+            dockerfile: api/client/Dockerfile
         image: client
         networks:
-            - microservices
+            - insights-network
         ports:
             - 5001:5001
 
     advisor_service:
         build:
             context: .
-            dockerfile: advisor/Dockerfile
+            dockerfile: api/advisor/Dockerfile
         image: advisor
         networks:
-            - microservices
+            - insights-network
         ports:
             - 5002:5002
 
     assets_service:
         build:
             context: .
-            dockerfile: assets/Dockerfile
+            dockerfile: api/assets/Dockerfile
         image: assets
         networks:
-            - microservices
+            - insights-network
         ports:
             - 5003:5003
 
+    portfolio_service:
+        build:
+            context: .
+            dockerfile: api/portfolio/Dockerfile
+        image: portfolio
+        networks:
+            - insights-network
+        ports:
+            - 5004:5004
+
 networks:
-    microservices:
+    insights-network:
         driver: bridge

@@ -41,10 +41,11 @@ CREATE TABLE client (
 
 CREATE TABLE portfolio(
     id SERIAL PRIMARY KEY,
-    amount MONEY NOT NULL,
+    name VARCHAR(200) NOT NULL,
+    amount FLOAT NOT NULL,
     status INTEGER NOT NULL,
-	client_id INTEGER NOT NULL,
-	FOREIGN KEY (client_id) REFERENCES client(id) ON DELETE CASCADE
+	advisor_id INTEGER NOT NULL,
+	FOREIGN KEY (advisor_id) REFERENCES advisor(id)
 );
 
 CREATE TABLE product(
@@ -53,4 +54,12 @@ CREATE TABLE product(
     amount FLOAT NOT NULL,
 	portfolio_id INTEGER NOT NULL,
     FOREIGN KEY (portfolio_id) REFERENCES portfolio(id) ON DELETE CASCADE
+);
+
+CREATE TABLE portfolio_client(
+  portfolio_id INT,
+  client_id INT,
+  FOREIGN KEY (portfolio_id) REFERENCES portfolio(id),
+  FOREIGN KEY (client_id) REFERENCES client(id),
+  PRIMARY KEY (portfolio_id, client_id)
 );
