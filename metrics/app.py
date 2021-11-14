@@ -1,22 +1,23 @@
 import os
 import grpc
 import pandas as pd
+import json
 from concurrent import futures
 from datetime import datetime
 from dateutil.relativedelta import relativedelta
+import numpy as np
 
 from google.protobuf.json_format import MessageToDict
-import coincide_pb2_grpc as grpc_service
-from coincide_pb2_grpc import InfoStub
-from coincide_pb2 import InfoRequest, MetricsResponse
+import insights_pb2_grpc as grpc_service
+from insights_pb2_grpc import InfoStub
+from insights_pb2 import InfoRequest, MetricsResponse, PortfolioResponse
 
 from utils.product_metrics import Metrics
+from utils.portfolio_metrics import Product, Portfolio
+from utils.dashboard import build_dashboard
 
 
-prices_host = os.environ.get("PRICES_HOST", "localhost")
 prices_port = os.environ.get("PRICES_PORT", "8888")
-
-metrics_host = os.environ.get("METRICS_HOST", "localhost")
 metrics_port = os.environ.get("METRICS_PORT", "9999")
 
 
@@ -27,7 +28,7 @@ def get_12m(base_date):
 
 def get_prices(request):
     try:
-        with grpc.insecure_channel(f"{prices_host}:{prices_port}") as channel:
+        with grpc.insecure_channel(f"prices_service:{prices_port}") as channel:
             stub = InfoStub(channel)
             start_date = get_12m(request.base_date)
             request = InfoRequest(ticker=f"{request.ticker}.SA", start_date=start_date, end_date=request.base_date)
@@ -35,6 +36,18 @@ def get_prices(request):
             return prices
     except Exception as e:
         raise e
+
+
+def get_multiple_prices(request):
+    try:
+        with grpc.insecure_channel(f"prices_service:{prices_port}") as channel:
+            stub = InfoStub(channel)
+            request = InfoRequest(request)
+            prices = stub.GetPrices(request).raw
+            return prices
+    except Exception as e:
+        raise e
+
 
 def response_builder(metrics, name):
     _metrics = MetricsResponse()
@@ -75,10 +88,10 @@ def compose_df(data):
 def server_setup():
     server = grpc.server(futures.ThreadPoolExecutor(max_workers=10))
     grpc_service.add_MetricsServicer_to_server(MetricsServicer(), server)
-    server.add_insecure_port(f"{metrics_host}:{metrics_port}")
+    server.add_insecure_port(f"metrics_service:{metrics_port}")
     try:
         server.start()
-        print(f"Server is running on {metrics_host}:{metrics_port}")
+        print(f"Server is running on metrics_service:{metrics_port}")
         server.wait_for_termination()
     except KeyboardInterrupt:
         print("Stopping metrics service")
@@ -98,15 +111,17 @@ class MetricsServicer(grpc_service.MetricsServicer):
             return MetricsResponse()
 
     def GetPortfolioMetrics(self, request, context):
-        data = get_prices(request)
-        if data.ByteSize():
-            df = compose_df(data)
-            if df.empty:
-                return MetricsResponse()
-            metrics = Metrics(request).get_metrics(df)
-            return response_builder(metrics, data.name)
-        else:
-            return MetricsResponse()
+        products = request["products"]
+        _ids = [p["id"] for p in products]
+        data = get_multiple_prices({"tickers": _ids, "start_date": request.start_date, "end_date": request.end_date})
+        close = pd.DataFrame(json.loads(data))
+        weights = np.array([p["proportion"] for p in products])
+        values = np.array([p["amount"] for p in products])
+        products = Product(close, values)
+        portfolio = Portfolio(close, weights, [sum(values)])
+        dash = build_dashboard(products, portfolio, close)
+        print(dash)
+        return PortfolioResponse(dash)
 
 
 if __name__ == "__main__":

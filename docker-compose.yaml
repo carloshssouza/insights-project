@@ -10,7 +10,7 @@ services:
         volumes:
             - ./redis-volume:/data
         networks:
-            - microservices
+            - insights-network
 
     postgres_db:
         image: postgres
@@ -21,7 +21,7 @@ services:
         volumes:
             - ./postgres-volume:/var/lib/postgresql/data
         networks:
-            - microservices
+            - insights-network
 
     pgadmin:
         image: dpage/pgadmin4
@@ -33,38 +33,87 @@ services:
         depends_on:
             - postgres_db
         networks:
-            - microservices
+            - insights-network
 
     client_service:
         build:
             context: .
-            dockerfile: client/Dockerfile
+            dockerfile: api/client/Dockerfile
         image: client
         networks:
-            - microservices
+            - insights-network
         ports:
             - 5001:5001
 
     advisor_service:
         build:
             context: .
-            dockerfile: advisor/Dockerfile
+            dockerfile: api/advisor/Dockerfile
         image: advisor
         networks:
-            - microservices
+            - insights-network
         ports:
             - 5002:5002
 
     assets_service:
         build:
             context: .
-            dockerfile: assets/Dockerfile
+            dockerfile: api/assets/Dockerfile
         image: assets
         networks:
-            - microservices
+            - insights-network
         ports:
             - 5003:5003
 
+    portfolio_service:
+        build:
+            context: .
+            dockerfile: api/portfolio/Dockerfile
+        environment:
+            METRICS_HOST: metrics_service
+            METRICS_PORT: 9999
+        image: portfolio
+        networks:
+            - insights-network
+        ports:
+            - 5004:5004
+
+    prices_service:
+        build:
+            context: .
+            dockerfile: prices/Dockerfile
+        image: prices
+        networks:
+            - insights-network
+        ports:
+            - 8888:8888
+
+    metrics_service:
+        build:
+            context: .
+            dockerfile: metrics/Dockerfile
+        environment:
+            PRICES_HOST: prices_service
+        image: metrics
+        networks:
+            - insights-network
+        ports:
+            - 9999:9999
+
+    prometheus:
+        image: prom/prometheus:v2.21.0
+        ports:
+          - 9000:9090
+        volumes:
+          - ./prometheus:/etc/prometheus
+          - prometheus-volume:/prometheus
+        command: --web.enable-lifecycle  --config.file=/etc/prometheus/prometheus.yml
+
+volumes:
+    redis-volume:
+    postgres-volume:
+    prometheus-volume:
+
 networks:
-    microservices:
+    insights-network:
         driver: bridge
