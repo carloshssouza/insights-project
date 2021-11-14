@@ -266,6 +266,123 @@
 				"url": null
 			},
 			"response": []
+		},
+		{
+			"name": "Portfolio - List",
+			"protocolProfileBehavior": {
+				"disableBodyPruning": true
+			},
+			"request": {
+				"method": "GET",
+				"header": [],
+				"body": {
+					"mode": "file",
+					"file": {}
+				},
+				"url": {
+					"raw": "localhost:5004/portfolios/1",
+					"host": [
+						"localhost"
+					],
+					"port": "5004",
+					"path": [
+						"portfolios",
+						"1"
+					]
+				}
+			},
+			"response": []
+		},
+		{
+			"name": "Portfolio - Create",
+			"request": {
+				"method": "POST",
+				"header": [],
+				"body": {
+					"mode": "raw",
+					"raw": "{\r\n    \"name\": \"Portfolio Test\",\r\n    \"amount\": 1241.204,\r\n    \"status\": 1,\r\n    \"advisor_id\": 1\r\n}",
+					"options": {
+						"raw": {
+							"language": "json"
+						}
+					}
+				},
+				"url": {
+					"raw": "localhost:5004/portfolio/create",
+					"host": [
+						"localhost"
+					],
+					"port": "5004",
+					"path": [
+						"portfolio",
+						"create"
+					]
+				}
+			},
+			"response": []
+		},
+		{
+			"name": "Portfolio - Read",
+			"protocolProfileBehavior": {
+				"disableBodyPruning": true
+			},
+			"request": {
+				"method": "GET",
+				"header": [],
+				"body": {
+					"mode": "file",
+					"file": {}
+				},
+				"url": {
+					"raw": "localhost:5004/portfolios/1",
+					"host": [
+						"localhost"
+					],
+					"port": "5004",
+					"path": [
+						"portfolios",
+						"1"
+					]
+				}
+			},
+			"response": []
+		},
+		{
+			"name": "Portfolio - Add Product",
+			"request": {
+				"method": "POST",
+				"header": [],
+				"body": {
+					"mode": "raw",
+					"raw": "[\r\n    {\"id\": \"ITSA4.SA\", \"proportion\": 0.4, \"amount\": 1000, \"portofolio_id\": 1}\r\n]",
+					"options": {
+						"raw": {
+							"language": "json"
+						}
+					}
+				},
+				"url": {
+					"raw": "localhost:5004/product/add",
+					"host": [
+						"localhost"
+					],
+					"port": "5004",
+					"path": [
+						"product",
+						"add"
+					]
+				}
+			},
+			"response": []
+		},
+		{
+			"name": "Portfolio - Metrics",
+			"request": {
+				"method": "GET",
+				"header": [],
+				"url": null
+			},
+			"response": []
 		}
 	]
 }
