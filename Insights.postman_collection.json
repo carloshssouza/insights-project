@@ -11,11 +11,11 @@
 				"method": "GET",
 				"header": [],
 				"url": {
-					"raw": "localhost:5000/clients",
+					"raw": "localhost:5001/clients",
 					"host": [
 						"localhost"
 					],
-					"port": "5000",
+					"port": "5001",
 					"path": [
 						"clients"
 					]
@@ -30,7 +30,7 @@
 				"header": [],
 				"body": {
 					"mode": "raw",
-					"raw": "{\r\n            \"cpf\": \"self.cpf\",\r\n            \"name\": \"self.name\",\r\n            \"username\": \"self.username\",\r\n            \"password\": \"self.password\",\r\n            \"email\": \"self.email\",\r\n            \"suitability\": \"self.suitability\",\r\n            \"cel\": \"self.cel\",\r\n            \"address\": \"self.address\",\r\n            \"city\": \"self.city\",\r\n            \"state\": \"self.state\",\r\n            \"status\": 1,\r\n            \"complement\": \"self.complement\",\r\n            \"zip_code\": \"self.zip_code\",\r\n            \"obs\": \"self.obs\"\r\n        }",
+					"raw": "{\r\n            \"cpf\": \"self.cpf\",\r\n            \"name\": \"self.name\",\r\n            \"username\": \"self.username\",\r\n            \"password\": \"self.password\",\r\n            \"email\": \"self.email\",\r\n            \"suitability\": \"self.suitability\",\r\n            \"cel\": \"self.cel\",\r\n            \"address\": \"self.address\",\r\n            \"city\": \"self.city\",\r\n            \"state\": \"self.state\",\r\n            \"status\": 1,\r\n            \"complement\": \"self.complement\",\r\n            \"zip_code\": \"self.zip_code\",\r\n            \"obs\": \"self.obs\",\r\n            \"advisor_id\": 1\r\n        }",
 					"options": {
 						"raw": {
 							"language": "json"
@@ -38,11 +38,11 @@
 					}
 				},
 				"url": {
-					"raw": "localhost:5000/client/create",
+					"raw": "localhost:5001/client/create",
 					"host": [
 						"localhost"
 					],
-					"port": "5000",
+					"port": "5001",
 					"path": [
 						"client",
 						"create"
@@ -57,11 +57,11 @@
 				"method": "GET",
 				"header": [],
 				"url": {
-					"raw": "localhost:5000/client/1",
+					"raw": "localhost:5001/client/1",
 					"host": [
 						"localhost"
 					],
-					"port": "5000",
+					"port": "5001",
 					"path": [
 						"client",
 						"1"
@@ -85,11 +85,11 @@
 					}
 				},
 				"url": {
-					"raw": "localhost:5000/client/update/1",
+					"raw": "localhost:5001/client/update/1",
 					"host": [
 						"localhost"
 					],
-					"port": "5000",
+					"port": "5001",
 					"path": [
 						"client",
 						"update",
@@ -105,11 +105,11 @@
 				"method": "GET",
 				"header": [],
 				"url": {
-					"raw": "localhost:5000/client/delete/1",
+					"raw": "localhost:5001/client/delete/1",
 					"host": [
 						"localhost"
 					],
-					"port": "5000",
+					"port": "5001",
 					"path": [
 						"client",
 						"delete",
@@ -132,11 +132,11 @@
 					"file": {}
 				},
 				"url": {
-					"raw": "localhost:5000/advisors",
+					"raw": "localhost:5002/advisors",
 					"host": [
 						"localhost"
 					],
-					"port": "5000",
+					"port": "5002",
 					"path": [
 						"advisors"
 					]
@@ -159,11 +159,11 @@
 					}
 				},
 				"url": {
-					"raw": "localhost:5000/advisor/create",
+					"raw": "localhost:5002/advisor/create",
 					"host": [
 						"localhost"
 					],
-					"port": "5000",
+					"port": "5002",
 					"path": [
 						"advisor",
 						"create"
@@ -178,11 +178,11 @@
 				"method": "GET",
 				"header": [],
 				"url": {
-					"raw": "localhost:5000/advisor/1",
+					"raw": "localhost:5002/advisor/1",
 					"host": [
 						"localhost"
 					],
-					"port": "5000",
+					"port": "5002",
 					"path": [
 						"advisor",
 						"1"
@@ -206,11 +206,11 @@
 					}
 				},
 				"url": {
-					"raw": "localhost:5000/advisor/update/1",
+					"raw": "localhost:5002/advisor/update/1",
 					"host": [
 						"localhost"
 					],
-					"port": "5000",
+					"port": "5002",
 					"path": [
 						"advisor",
 						"update",
@@ -226,11 +226,11 @@
 				"method": "GET",
 				"header": [],
 				"url": {
-					"raw": "localhost:5000/advisor/delete/1",
+					"raw": "localhost:5002/advisor/delete/1",
 					"host": [
 						"localhost"
 					],
-					"port": "5000",
+					"port": "5002",
 					"path": [
 						"advisor",
 						"delete",
@@ -245,49 +245,89 @@
 			"request": {
 				"method": "GET",
 				"header": [],
-				"url": null
+				"url": {
+					"raw": "localhost:5003/assets",
+					"host": [
+						"localhost"
+					],
+					"port": "5003",
+					"path": [
+						"assets"
+					]
+				}
 			},
 			"response": []
 		},
 		{
 			"name": "Assets - Info",
 			"request": {
-				"method": "GET",
+				"method": "POST",
 				"header": [],
-				"url": null
+				"body": {
+					"mode": "raw",
+					"raw": "{\"symbols\": [\"ITSA4.SA\", \"OIBR3.SA\"]}",
+					"options": {
+						"raw": {
+							"language": "json"
+						}
+					}
+				},
+				"url": {
+					"raw": "localhost:5003/assets/info",
+					"host": [
+						"localhost"
+					],
+					"port": "5003",
+					"path": [
+						"assets",
+						"info"
+					]
+				}
 			},
 			"response": []
 		},
 		{
 			"name": "Assets - Historic",
 			"request": {
-				"method": "GET",
+				"method": "POST",
 				"header": [],
-				"url": null
+				"body": {
+					"mode": "raw",
+					"raw": "{\"symbols\": [\"ITSA4.SA\"]}",
+					"options": {
+						"raw": {
+							"language": "json"
+						}
+					}
+				},
+				"url": {
+					"raw": "localhost:5003/assets/historic",
+					"host": [
+						"localhost"
+					],
+					"port": "5003",
+					"path": [
+						"assets",
+						"historic"
+					]
+				}
 			},
 			"response": []
 		},
 		{
 			"name": "Portfolio - List",
-			"protocolProfileBehavior": {
-				"disableBodyPruning": true
-			},
 			"request": {
 				"method": "GET",
 				"header": [],
-				"body": {
-					"mode": "file",
-					"file": {}
-				},
 				"url": {
-					"raw": "localhost:5004/portfolios/1",
+					"raw": "localhost:5004/portfolios/2",
 					"host": [
 						"localhost"
 					],
 					"port": "5004",
 					"path": [
 						"portfolios",
-						"1"
+						"2"
 					]
 				}
 			},
@@ -334,13 +374,13 @@
 					"file": {}
 				},
 				"url": {
-					"raw": "localhost:5004/portfolios/1",
+					"raw": "localhost:5004/portfolio/1",
 					"host": [
 						"localhost"
 					],
 					"port": "5004",
 					"path": [
-						"portfolios",
+						"portfolio",
 						"1"
 					]
 				}
@@ -354,7 +394,7 @@
 				"header": [],
 				"body": {
 					"mode": "raw",
-					"raw": "[\r\n    {\"id\": \"ITSA4.SA\", \"proportion\": 0.4, \"amount\": 1000, \"portofolio_id\": 1}\r\n]",
+					"raw": "{\r\n    \"portfolio_id\": 1,\r\n    \"products\": [\r\n        {\"id\": \"BPAC11.SA\", \"proportion\": 0.4, \"amount\": 1000}\r\n    ]\r\n}\r\n",
 					"options": {
 						"raw": {
 							"language": "json"
@@ -378,9 +418,28 @@
 		{
 			"name": "Portfolio - Metrics",
 			"request": {
-				"method": "GET",
+				"method": "POST",
 				"header": [],
-				"url": null
+				"body": {
+					"mode": "raw",
+					"raw": "{\r\n    \"id\": 1,\r\n    \"start_date\": \"2020-01-01\",\r\n    \"end_date\": \"2021-01-01\"\r\n}",
+					"options": {
+						"raw": {
+							"language": "json"
+						}
+					}
+				},
+				"url": {
+					"raw": "localhost:5004/portfolio/metrics",
+					"host": [
+						"localhost"
+					],
+					"port": "5004",
+					"path": [
+						"portfolio",
+						"metrics"
+					]
+				}
 			},
 			"response": []
 		}

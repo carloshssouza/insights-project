@@ -6,6 +6,7 @@ from concurrent import futures
 from datetime import datetime
 from dateutil.relativedelta import relativedelta
 import numpy as np
+import logging
 
 from google.protobuf.json_format import MessageToDict
 import insights_pb2_grpc as grpc_service
@@ -111,17 +112,20 @@ class MetricsServicer(grpc_service.MetricsServicer):
             return MetricsResponse()
 
     def GetPortfolioMetrics(self, request, context):
-        products = request["products"]
-        _ids = [p["id"] for p in products]
-        data = get_multiple_prices({"tickers": _ids, "start_date": request.start_date, "end_date": request.end_date})
-        close = pd.DataFrame(json.loads(data))
-        weights = np.array([p["proportion"] for p in products])
-        values = np.array([p["amount"] for p in products])
-        products = Product(close, values)
-        portfolio = Portfolio(close, weights, [sum(values)])
-        dash = build_dashboard(products, portfolio, close)
-        print(dash)
-        return PortfolioResponse(dash)
+        try:
+            products = request["products"]
+            _ids = [p["id"] for p in products]
+            data = get_multiple_prices({"tickers": _ids, "start_date": request.start_date, "end_date": request.end_date})
+            close = pd.DataFrame(json.loads(data))
+            weights = np.array([p["proportion"] for p in products])
+            values = np.array([p["amount"] for p in products])
+            products = Product(close, values)
+            portfolio = Portfolio(close, weights, [sum(values)])
+            dash = build_dashboard(products, portfolio, close)
+            logging.debug(dash)
+            return PortfolioResponse(dash)
+        except Exception as e:
+            logging.debug(f"Error {e}")
 
 
 if __name__ == "__main__":
