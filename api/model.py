@@ -16,6 +16,7 @@ class Portfolio(db.Model):
     status = db.Column(db.Integer())
     advisor_id = db.Column(db.Integer(), db.ForeignKey("advisor.id"))
     products = db.relationship("Product", backref="portfolio")
+    portfolios = db.relationship('Client', secondary=PortfolioClient, backref=db.backref('portfolios'))
 
     def __init__(self, name, amount, status,
                  advisor_id, products):
@@ -85,11 +86,10 @@ class Client(db.Model):
     obs = db.Column(db.String())
     status = db.Column(db.Integer())
     advisor_id = db.Column(db.String, db.ForeignKey("advisor.id"))
-    portfolios = relationship('Portfolio', secondary=PortfolioClient, backref='portfolio')
 
     def __init__(self, cpf, name, username, password,
                  email, suitability, cel, address, city,
-                 state, status, complement, zip_code, obs, advisor_id, portfolios):
+                 state, status, complement, zip_code, obs, advisor_id):
         self.cpf = cpf
         self.name = name
         self.username = username
@@ -105,7 +105,6 @@ class Client(db.Model):
         self.zip_code = zip_code
         self.obs = obs
         self.advisor_id = advisor_id
-        self.portfolios = portfolios
 
     def __repr__(self):
         return '<id {}>'.format(self.id)
@@ -128,7 +127,6 @@ class Client(db.Model):
             "zip_code": self.zip_code,
             "obs": self.obs,
             "advisor_id": self.advisor_id,
-            "portfolios": self.portfolios
         }
 
 

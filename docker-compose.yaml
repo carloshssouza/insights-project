@@ -108,11 +108,25 @@ services:
           - ./prometheus:/etc/prometheus
           - prometheus-volume:/prometheus
         command: --web.enable-lifecycle  --config.file=/etc/prometheus/prometheus.yml
+        networks:
+            - insights-network
+
+    grafana:
+        image: grafana/grafana:7.5.7
+        ports:
+            - 3000:3000
+        restart: unless-stopped
+        volumes:
+            - ./grafana/provisioning/datasources:/etc/grafana/provisioning/datasources
+            - grafana-data:/var/lib/grafana
+        networks:
+            - insights-network
 
 volumes:
     redis-volume:
     postgres-volume:
     prometheus-volume:
+    grafana-data:
 
 networks:
     insights-network:
