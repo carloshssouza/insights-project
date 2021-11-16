@@ -16,30 +16,24 @@ def parse_info(df):
     return df.to_dict(orient="records")[0]
 
 
-def parse_series(symbol, df):
+def parse_series(df):
     _filter = (pd.to_datetime(df.index) > (pd.to_datetime(df.index[-1]) - pd.DateOffset(years=1)))
     columns = ["Close", "Dividends", "Volume", "Date"]
     _rename = {"Close": "close", "Dividends": "dividends", "Volume": "volume", "Date": "date"}
     df.index = df.index.strftime("%Y-%m-%d")
     df = df[_filter].reset_index()[columns].rename(columns=_rename)
     historic = df.to_dict(orient="records")
-    return {
-        "symbol": symbol,
-        "historic": historic,
-    }
+    return historic
 
 
-def parse_results(symbol, df, _type):
-    if _type == "info":
-        return parse_info(df)
-    else:
-        return parse_series(symbol, df)
-
-
-def get_symbols(symbols, _type="historic"):
-    results = {}
+def get_symbols(symbols):
+    results = []
     for symbol in symbols:
-        results[symbol] = r.get_parquet(key_compose(symbol, _type))
+        results.append({
+            "symbol": symbol,
+            "historic": parse_series(r.get_parquet(key_compose(symbol, "historic"))),
+            "info": parse_info(r.get_parquet(key_compose(symbol, "info")))
+        })
     return results
 
 
@@ -49,12 +43,3 @@ def list_assets():
     for k in keys:
         symbols.append(k.decode("utf-8").split("}.")[1])
     return list(set(symbols))
-
-
-def get_assets(symbols, _type):
-    results = []
-    _results = get_symbols(symbols, _type=_type)
-    for k, v in _results.items():
-        results.append(parse_results(k, v, _type))
-
-    return results

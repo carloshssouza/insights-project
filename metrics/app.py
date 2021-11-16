@@ -6,7 +6,6 @@ from concurrent import futures
 from datetime import datetime
 from dateutil.relativedelta import relativedelta
 import numpy as np
-import logging
 
 from google.protobuf.json_format import MessageToDict
 import insights_pb2_grpc as grpc_service
@@ -122,10 +121,9 @@ class MetricsServicer(grpc_service.MetricsServicer):
             products = Product(close, values)
             portfolio = Portfolio(close, weights, [sum(values)])
             dash = build_dashboard(products, portfolio, close)
-            logging.debug(dash)
             return PortfolioResponse(dash)
         except Exception as e:
-            logging.debug(f"Error {e}")
+            raise e
 
 
 if __name__ == "__main__":
