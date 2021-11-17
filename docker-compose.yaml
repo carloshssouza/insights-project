@@ -72,6 +72,7 @@ services:
         environment:
             METRICS_HOST: metrics_service
             METRICS_PORT: 9999
+            PYTHONBUFFERED: 1
         image: portfolio
         networks:
             - insights-network

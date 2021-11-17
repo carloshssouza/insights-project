@@ -1,5 +1,5 @@
 import os
-from flask import Flask, request, jsonify
+from flask import Flask, request, jsonify, Response
 from flask_cors import CORS, cross_origin
 from flask_sqlalchemy import SQLAlchemy
 
@@ -31,6 +31,14 @@ graphs["h"] = Histogram("request_duration_seconds", "Request duration in seconds
 def hello():
     graphs["c"].inc()
     return {"status": 200}
+
+
+@app.route("/metrics")
+def prometheus_metrics():
+    res = []
+    for k, v in graphs.items():
+        res.append(prometheus_client.generate_latest(v))
+    return Response(res, mimetype="text/plain")
 
 
 @app.route("/clients")

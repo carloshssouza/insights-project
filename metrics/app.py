@@ -1,7 +1,9 @@
+from __future__ import print_function
 import os
 import grpc
 import pandas as pd
 import json
+import sys
 from concurrent import futures
 from datetime import datetime
 from dateutil.relativedelta import relativedelta
@@ -35,6 +37,7 @@ def get_prices(request):
             prices = stub.GetInfo(request)
             return prices
     except Exception as e:
+        print(e, file=sys.stderr)
         raise e
 
 
@@ -46,6 +49,7 @@ def get_multiple_prices(request):
             prices = stub.GetPrices(request).raw
             return prices
     except Exception as e:
+        print(e, file=sys.stderr)
         raise e
 
 
@@ -91,10 +95,10 @@ def server_setup():
     server.add_insecure_port(f"metrics_service:{metrics_port}")
     try:
         server.start()
-        print(f"Server is running on metrics_service:{metrics_port}")
+        print(f"Server is running on metrics_service:{metrics_port}", file=sys.stderr)
         server.wait_for_termination()
     except KeyboardInterrupt:
-        print("Stopping metrics service")
+        print("Stopping metrics service", file=sys.stderr)
         server.stop(0)
 
 
@@ -112,6 +116,7 @@ class MetricsServicer(grpc_service.MetricsServicer):
 
     def GetPortfolioMetrics(self, request, context):
         try:
+            print(request, file=sys.stderr)
             products = request["products"]
             _ids = [p["id"] for p in products]
             data = get_multiple_prices({"tickers": _ids, "start_date": request.start_date, "end_date": request.end_date})
@@ -121,11 +126,12 @@ class MetricsServicer(grpc_service.MetricsServicer):
             products = Product(close, values)
             portfolio = Portfolio(close, weights, [sum(values)])
             dash = build_dashboard(products, portfolio, close)
+            print(dash, file=sys.stderr)
             return PortfolioResponse(dash)
         except Exception as e:
             raise e
 
 
 if __name__ == "__main__":
-    print(f"Starting metrics server on port {metrics_port}")
+    print(f"Starting metrics server on port {metrics_port}", file=sys.stderr)
     server_setup()
