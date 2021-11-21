@@ -1,0 +1,211 @@
+version: "3.8"
+
+services:
+    redis_db:
+        container_name: redis_db
+        command: bash -c "redis-server --appendonly yes"
+        image: redis
+        ports:
+            - "6379:6379"
+        volumes:
+            - ./redis-volume:/data
+        networks:
+            - insights-network
+
+    postgres_db:
+        image: postgres
+        environment:
+            POSTGRES_PASSWORD: "senha_trabalho_unifei"
+        ports:
+            - "15432:5432"
+        volumes:
+            - ./postgres-volume:/var/lib/postgresql/data
+        networks:
+            - insights-network
+
+    pgadmin:
+        image: dpage/pgadmin4
+        environment:
+            PGADMIN_DEFAULT_EMAIL: "lucasblazzi@hotmail.com"
+            PGADMIN_DEFAULT_PASSWORD: "senha_trabalho_unifei"
+        ports:
+            - "16543:80"
+        depends_on:
+            - postgres_db
+        networks:
+            - insights-network
+
+    client_service:
+        build:
+            context: .
+            dockerfile: api/client/Dockerfile
+        image: client
+        networks:
+            - insights-network
+        ports:
+            - 5001:5001
+
+    advisor_service:
+        build:
+            context: .
+            dockerfile: api/advisor/Dockerfile
+        image: advisor
+        networks:
+            - insights-network
+        ports:
+            - 5002:5002
+
+    assets_service:
+        build:
+            context: .
+            dockerfile: api/assets/Dockerfile
+        image: assets
+        networks:
+            - insights-network
+        ports:
+            - 5003:5003
+
+    portfolio_service:
+        build:
+            context: .
+            dockerfile: api/portfolio/Dockerfile
+        environment:
+            METRICS_HOST: metrics_service
+            METRICS_PORT: 9999
+            PYTHONBUFFERED: 1
+        image: portfolio
+        networks:
+            - insights-network
+        ports:
+            - 5004:5004
+
+    prices_service:
+        build:
+            context: .
+            dockerfile: prices/Dockerfile
+        image: prices
+        networks:
+            - insights-network
+        ports:
+            - 8888:8888
+
+    metrics_service:
+        build:
+            context: .
+            dockerfile: metrics/Dockerfile
+        environment:
+            PRICES_HOST: prices_service
+        image: metrics
+        networks:
+            - insights-network
+        ports:
+            - 9999:9999
+
+    publisher_service:
+        build:
+            context: .
+            dockerfile: publisher/Dockerfile
+        depends_on:
+            - redis_db
+        image: publiser
+        networks:
+            - insights-network
+        ports:
+            - 8001:8001
+
+    notifier_service:
+        build:
+            context: .
+            dockerfile: notifier/Dockerfile
+        environment:
+            EMAIL: notifygrupo02@gmail.com
+            PASSWORD: senhamuitoboa
+        depends_on:
+            - publisher_service
+        image: notifier
+        networks:
+            - insights-network
+
+    notifier_products_service:
+        build:
+            context: .
+            dockerfile: notifier_products/Dockerfile
+        environment:
+            EMAIL: notifygrupo02@gmail.com
+            PASSWORD: senhamuitoboa
+        depends_on:
+            - publisher_service
+        image: notifier_products
+        networks:
+            - insights-network
+
+    crawler_service:
+        build:
+            context: .
+            dockerfile: crawler/Dockerfile
+        environment:
+            METRICS_HOST: metrics_service
+            METRICS_PORT: 9999
+        ports:
+            - 10101:10101
+        depends_on:
+            - publisher_service
+            - notifier_service
+            - redis_db
+        image: crawler
+        networks:
+            - insights-network
+
+#    dashboard_service:
+#        build:
+#            context: .
+#            dockerfile: dashboard/Dockerfile
+#        ports:
+#            - 8501:8501
+#        image: dashboard
+
+    front_portfolio:
+        container_name: front_portfolio
+        build:
+            context: .
+            dockerfile: front-portfolio/Dockerfile
+        volumes:
+            - '.:/front-portfolio'
+            - '/front-portfolio/node_modules'
+        ports:
+            - 3001:3001
+        networks:
+            - insights-network
+
+    prometheus:
+        image: prom/prometheus:v2.21.0
+        ports:
+          - 9000:9090
+        volumes:
+          - ./prometheus:/etc/prometheus
+          - prometheus-volume:/prometheus
+        command: --web.enable-lifecycle  --config.file=/etc/prometheus/prometheus.yml
+        networks:
+            - insights-network
+
+    grafana:
+        image: grafana/grafana:7.5.7
+        ports:
+            - 3000:3000
+        restart: unless-stopped
+        volumes:
+            - ./grafana/provisioning/datasources:/etc/grafana/provisioning/datasources
+            - grafana-data:/var/lib/grafana
+        networks:
+            - insights-network
+
+volumes:
+    redis-volume:
+    postgres-volume:
+    prometheus-volume:
+    grafana-data:
+    front-portfolio:
+
+networks:
+    insights-network:
+        driver: bridge

@@ -1,0 +1,6 @@
+Flask==2.0.2
+flask-cors
+pandas==1.2.4
+redis==3.5.3
+pyarrow
+prometheus-client

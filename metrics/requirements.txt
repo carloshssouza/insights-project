@@ -1,0 +1,5 @@
+grpcio-tools==1.40.0
+pandas==1.2.4
+scipy==1.7.2
+numpy==1.21.2
+py-grpc-prometheus
