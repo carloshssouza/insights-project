@@ -1,5 +1,15 @@
 import redis
 
+_email = {
+        "name": "Lucas Blazzi",
+        "email": "lucasblazzi@hotmail.com",
+        "amount": 51231,
+        "products": [{
+            "id": "ITSA4.SA", "proportion": 0.51, "amount": 10000
+        }]
+    }
+
+
 
 _message =     {
         "name": "S\u00e3o Carlos",
@@ -26,4 +36,14 @@ def sender():
     #print(client.xread({"products": '$'}, count=1, block=0))
 
 
-sender()
+# sender()
+import json
+from json import JSONEncoder
+def sender_email():
+    client = redis.Redis(host="localhost", port=6379)
+    for k, v in _email.items():
+        if isinstance(v, list):
+            _email[k] = str(v)
+    client.xadd("portfolio", _email)
+
+sender_email()

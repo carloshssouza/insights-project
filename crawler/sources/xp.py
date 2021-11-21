@@ -30,15 +30,14 @@ def category_xp(target: str) -> list:
                 _product[parsed_data[0]] = parsed_data[1]
             else:
                 continue
-        _product["Nome"] = product.h4.text
         _product["ticker"] = product.h4.text if categories[target][0] != "Fundos Imobiliários" \
             else product.h4.text.split("-")[1].strip()
+        _product["Nome"] = f"{product.h4.text} - {_product['ticker']}"
         _product["Informações"] = product.a["href"]
         _product["category_builder"] = categories[target][1]
         _product["category"] = categories[target][0]
         _product["source"] = "XP Investimentos"
         _products.append(_product)
-        print(_product["ticker"])
     return _products
 
 

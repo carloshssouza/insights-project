@@ -58,6 +58,7 @@ async def read_from_stream(
     # Default case, blocking read for all messages added after calling XREAD
     return await redis.xread([stream], timeout=timeout_ms)
 
+
 @app.websocket("/stream/{stream}")
 async def proxy_stream(
     ws: WebSocket,
@@ -66,11 +67,11 @@ async def proxy_stream(
     past_ms: int = None,
     last_n: int = None,
     max_frequency: float = None,
-    email: str = None
+    email: str = None,
 ):
     await ws.accept()
     # Create redis connection with aioredis.create_redis
-    redis = await aioredis.create_redis("redis://localhost:6379")
+    redis = await aioredis.create_redis("redis://redis_db:6379")
 
     # Loop for as long as client is connected and our reads don't time out, sending messages to client over websocket
     while True:
@@ -106,10 +107,11 @@ async def proxy_stream(
             prepared_messages.append({"message_id": latest_id, "payload": payload})
 
         if email and stream == "products":
-            filter = Filter(email, redis, prepared_messages)
-            results = await filter.filter_products
+            _filter = Filter([email], redis, prepared_messages)
+            results = await _filter.filter_products
         else:
             results = [message["payload"] for message in prepared_messages]
+        logger.info(results)
         # Send messages to client, handling (ConnectionClosed, WebSocketDisconnect) in case client has disconnected
         try:
             await ws.send_json(results)

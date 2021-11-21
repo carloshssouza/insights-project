@@ -8,16 +8,20 @@ from concurrent import futures
 from datetime import datetime
 from dateutil.relativedelta import relativedelta
 import numpy as np
+from py_grpc_prometheus.prometheus_server_interceptor import PromServerInterceptor
+from prometheus_client import start_http_server
 
-from google.protobuf.json_format import MessageToDict
+from google.protobuf.json_format import MessageToDict, Parse
 import insights_pb2_grpc as grpc_service
 from insights_pb2_grpc import InfoStub
-from insights_pb2 import InfoRequest, MetricsResponse, PortfolioResponse
+from insights_pb2 import ComposedMetrics, InfoRequest, MetricsResponse, PortfolioResponse, PricesRequest
 
 from utils.product_metrics import Metrics
 from utils.portfolio_metrics import Product, Portfolio
 from utils.dashboard import build_dashboard
+import logging
 
+logger = logging.getLogger("app")
 
 prices_port = os.environ.get("PRICES_PORT", "8888")
 metrics_port = os.environ.get("METRICS_PORT", "9999")
@@ -37,7 +41,6 @@ def get_prices(request):
             prices = stub.GetInfo(request)
             return prices
     except Exception as e:
-        print(e, file=sys.stderr)
         raise e
 
 
@@ -45,11 +48,13 @@ def get_multiple_prices(request):
     try:
         with grpc.insecure_channel(f"prices_service:{prices_port}") as channel:
             stub = InfoStub(channel)
-            request = InfoRequest(request)
-            prices = stub.GetPrices(request).raw
+            _request = PricesRequest()
+            _request.tickers.extend(request["tickers"])
+            _request.start_date = request["start_date"]
+            _request.end_date = request["end_date"]
+            prices = stub.GetPrices(_request).raw
             return prices
     except Exception as e:
-        print(e, file=sys.stderr)
         raise e
 
 
@@ -90,15 +95,17 @@ def compose_df(data):
 
 
 def server_setup():
-    server = grpc.server(futures.ThreadPoolExecutor(max_workers=10))
+    server = grpc.server(futures.ThreadPoolExecutor(max_workers=10),
+                         interceptors=(PromServerInterceptor(),))
     grpc_service.add_MetricsServicer_to_server(MetricsServicer(), server)
     server.add_insecure_port(f"metrics_service:{metrics_port}")
+    start_http_server(9998)
     try:
         server.start()
-        print(f"Server is running on metrics_service:{metrics_port}", file=sys.stderr)
+        logger.info(f"Server is running on metrics_service:{metrics_port}")
         server.wait_for_termination()
     except KeyboardInterrupt:
-        print("Stopping metrics service", file=sys.stderr)
+        logger.info("Stopping metrics service")
         server.stop(0)
 
 
@@ -109,6 +116,7 @@ class MetricsServicer(grpc_service.MetricsServicer):
             df = compose_df(data)
             if df.empty:
                 return MetricsResponse()
+            logger.info(f"Calculating metrics: {request.ticker}")
             metrics = Metrics(request).get_metrics(df)
             return response_builder(metrics, data.name)
         else:
@@ -116,18 +124,21 @@ class MetricsServicer(grpc_service.MetricsServicer):
 
     def GetPortfolioMetrics(self, request, context):
         try:
-            print(request, file=sys.stderr)
-            products = request["products"]
+            _request = MessageToDict(request)
+            products = _request["products"]
             _ids = [p["id"] for p in products]
-            data = get_multiple_prices({"tickers": _ids, "start_date": request.start_date, "end_date": request.end_date})
-            close = pd.DataFrame(json.loads(data))
+            logger.info(f"Calculating metrics for portfolio")
+            data = get_multiple_prices({"tickers": _ids, "start_date": _request["startDate"],
+                                        "end_date": _request["endDate"]})
+            close = pd.DataFrame(json.loads(data)).set_index("date")
             weights = np.array([p["proportion"] for p in products])
             values = np.array([p["amount"] for p in products])
             products = Product(close, values)
             portfolio = Portfolio(close, weights, [sum(values)])
             dash = build_dashboard(products, portfolio, close)
-            print(dash, file=sys.stderr)
-            return PortfolioResponse(dash)
+            logger.info(dash["portfolio"]["simple"])
+            r = PortfolioResponse()
+            return Parse(json.dumps(dash), r)
         except Exception as e:
             raise e
 

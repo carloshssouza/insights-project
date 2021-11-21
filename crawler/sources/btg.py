@@ -15,7 +15,7 @@ def parse_products(products: list, category) -> list:
         if alvo == "Em revisão":
             continue
         _product = {
-            "Nome": info.get("nome_da_empresa", ""),
+            "Nome": f"{info.get('nome_da_empresa', '')} - {info.get('nome_do_papel', '')}",
             "category": category[0],
             "category_builder": category[1],
             "ticker": info.get("nome_do_papel", ""),

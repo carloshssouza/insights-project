@@ -123,5 +123,23 @@ def advisor_remove(id_):
         return str(e)
 
 
+@app.route("/advisor/login", methods=["POST"])
+@cross_origin()
+def advisor_login():
+    graphs["c"].inc()
+    start = time.time()
+    try:
+        response = "User not found"
+        _input = request.get_json()
+        advisor = Advisor.query.filter(email=_input["email"], password=_input["password"]).first()
+        if advisor:
+            response = {"id": advisor.id}
+        graphs["h"].observe(time.time() - start)
+        return response
+    except Exception as e:
+        graphs["e"].inc()
+        return str(e)
+
+
 if __name__ == "__main__":
     app.run()

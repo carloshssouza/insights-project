@@ -101,6 +101,82 @@ services:
         ports:
             - 9999:9999
 
+    publisher_service:
+        build:
+            context: .
+            dockerfile: publisher/Dockerfile
+        depends_on:
+            - redis_db
+        image: publiser
+        networks:
+            - insights-network
+        ports:
+            - 8001:8001
+
+    notifier_service:
+        build:
+            context: .
+            dockerfile: notifier/Dockerfile
+        environment:
+            EMAIL: notifygrupo02@gmail.com
+            PASSWORD: senhamuitoboa
+        depends_on:
+            - publisher_service
+        image: notifier
+        networks:
+            - insights-network
+
+    notifier_products_service:
+        build:
+            context: .
+            dockerfile: notifier_products/Dockerfile
+        environment:
+            EMAIL: notifygrupo02@gmail.com
+            PASSWORD: senhamuitoboa
+        depends_on:
+            - publisher_service
+        image: notifier_products
+        networks:
+            - insights-network
+
+    crawler_service:
+        build:
+            context: .
+            dockerfile: crawler/Dockerfile
+        environment:
+            METRICS_HOST: metrics_service
+            METRICS_PORT: 9999
+        ports:
+            - 10101:10101
+        depends_on:
+            - publisher_service
+            - notifier_service
+            - redis_db
+        image: crawler
+        networks:
+            - insights-network
+
+    dashboard_service:
+        build:
+            context: .
+            dockerfile: dashboard/Dockerfile
+        ports:
+            - 8501:8501
+        image: dashboard
+
+    front_portfolio:
+        container_name: front_portfolio
+        build:
+            context: .
+            dockerfile: front-portfolio/Dockerfile
+        volumes:
+            - '.:/front-portfolio'
+            - '/front-portfolio/node_modules'
+        ports:
+            - 3001:3001
+        networks:
+            - insights-network
+
     prometheus:
         image: prom/prometheus:v2.21.0
         ports:
@@ -128,6 +204,7 @@ volumes:
     postgres-volume:
     prometheus-volume:
     grafana-data:
+    front-portfolio:
 
 networks:
     insights-network:

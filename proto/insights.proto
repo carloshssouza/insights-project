@@ -19,7 +19,7 @@ message SerieValue {
 
 message Serie {
     string name = 1;
-    repeated SerieValue values = 2;
+    string values = 2;
 }
 
 message MetricsResponse {

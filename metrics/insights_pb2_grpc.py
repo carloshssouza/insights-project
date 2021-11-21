@@ -2,7 +2,7 @@
 """Client and server classes corresponding to protobuf-defined services."""
 import grpc
 
-import coincide_pb2 as coincide__pb2
+import insights_pb2 as insights__pb2
 
 
 class MetricsStub(object):
@@ -16,8 +16,13 @@ class MetricsStub(object):
         """
         self.GetMetrics = channel.unary_unary(
                 '/Metrics/GetMetrics',
-                request_serializer=coincide__pb2.MetricsRequest.SerializeToString,
-                response_deserializer=coincide__pb2.MetricsResponse.FromString,
+                request_serializer=insights__pb2.MetricsRequest.SerializeToString,
+                response_deserializer=insights__pb2.MetricsResponse.FromString,
+                )
+        self.GetPortfolioMetrics = channel.unary_unary(
+                '/Metrics/GetPortfolioMetrics',
+                request_serializer=insights__pb2.PortfolioRequest.SerializeToString,
+                response_deserializer=insights__pb2.PortfolioResponse.FromString,
                 )
 
 
@@ -30,13 +35,24 @@ class MetricsServicer(object):
         context.set_details('Method not implemented!')
         raise NotImplementedError('Method not implemented!')
 
+    def GetPortfolioMetrics(self, request, context):
+        """Missing associated documentation comment in .proto file."""
+        context.set_code(grpc.StatusCode.UNIMPLEMENTED)
+        context.set_details('Method not implemented!')
+        raise NotImplementedError('Method not implemented!')
+
 
 def add_MetricsServicer_to_server(servicer, server):
     rpc_method_handlers = {
             'GetMetrics': grpc.unary_unary_rpc_method_handler(
                     servicer.GetMetrics,
-                    request_deserializer=coincide__pb2.MetricsRequest.FromString,
-                    response_serializer=coincide__pb2.MetricsResponse.SerializeToString,
+                    request_deserializer=insights__pb2.MetricsRequest.FromString,
+                    response_serializer=insights__pb2.MetricsResponse.SerializeToString,
+            ),
+            'GetPortfolioMetrics': grpc.unary_unary_rpc_method_handler(
+                    servicer.GetPortfolioMetrics,
+                    request_deserializer=insights__pb2.PortfolioRequest.FromString,
+                    response_serializer=insights__pb2.PortfolioResponse.SerializeToString,
             ),
     }
     generic_handler = grpc.method_handlers_generic_handler(
@@ -60,8 +76,25 @@ class Metrics(object):
             timeout=None,
             metadata=None):
         return grpc.experimental.unary_unary(request, target, '/Metrics/GetMetrics',
-            coincide__pb2.MetricsRequest.SerializeToString,
-            coincide__pb2.MetricsResponse.FromString,
+            insights__pb2.MetricsRequest.SerializeToString,
+            insights__pb2.MetricsResponse.FromString,
+            options, channel_credentials,
+            insecure, call_credentials, compression, wait_for_ready, timeout, metadata)
+
+    @staticmethod
+    def GetPortfolioMetrics(request,
+            target,
+            options=(),
+            channel_credentials=None,
+            call_credentials=None,
+            insecure=False,
+            compression=None,
+            wait_for_ready=None,
+            timeout=None,
+            metadata=None):
+        return grpc.experimental.unary_unary(request, target, '/Metrics/GetPortfolioMetrics',
+            insights__pb2.PortfolioRequest.SerializeToString,
+            insights__pb2.PortfolioResponse.FromString,
             options, channel_credentials,
             insecure, call_credentials, compression, wait_for_ready, timeout, metadata)
 
@@ -77,8 +110,13 @@ class InfoStub(object):
         """
         self.GetInfo = channel.unary_unary(
                 '/Info/GetInfo',
-                request_serializer=coincide__pb2.InfoRequest.SerializeToString,
-                response_deserializer=coincide__pb2.InfoResponse.FromString,
+                request_serializer=insights__pb2.InfoRequest.SerializeToString,
+                response_deserializer=insights__pb2.InfoResponse.FromString,
+                )
+        self.GetPrices = channel.unary_unary(
+                '/Info/GetPrices',
+                request_serializer=insights__pb2.PricesRequest.SerializeToString,
+                response_deserializer=insights__pb2.RawPriceResponse.FromString,
                 )
 
 
@@ -91,13 +129,24 @@ class InfoServicer(object):
         context.set_details('Method not implemented!')
         raise NotImplementedError('Method not implemented!')
 
+    def GetPrices(self, request, context):
+        """Missing associated documentation comment in .proto file."""
+        context.set_code(grpc.StatusCode.UNIMPLEMENTED)
+        context.set_details('Method not implemented!')
+        raise NotImplementedError('Method not implemented!')
+
 
 def add_InfoServicer_to_server(servicer, server):
     rpc_method_handlers = {
             'GetInfo': grpc.unary_unary_rpc_method_handler(
                     servicer.GetInfo,
-                    request_deserializer=coincide__pb2.InfoRequest.FromString,
-                    response_serializer=coincide__pb2.InfoResponse.SerializeToString,
+                    request_deserializer=insights__pb2.InfoRequest.FromString,
+                    response_serializer=insights__pb2.InfoResponse.SerializeToString,
+            ),
+            'GetPrices': grpc.unary_unary_rpc_method_handler(
+                    servicer.GetPrices,
+                    request_deserializer=insights__pb2.PricesRequest.FromString,
+                    response_serializer=insights__pb2.RawPriceResponse.SerializeToString,
             ),
     }
     generic_handler = grpc.method_handlers_generic_handler(
@@ -121,57 +170,13 @@ class Info(object):
             timeout=None,
             metadata=None):
         return grpc.experimental.unary_unary(request, target, '/Info/GetInfo',
-            coincide__pb2.InfoRequest.SerializeToString,
-            coincide__pb2.InfoResponse.FromString,
+            insights__pb2.InfoRequest.SerializeToString,
+            insights__pb2.InfoResponse.FromString,
             options, channel_credentials,
             insecure, call_credentials, compression, wait_for_ready, timeout, metadata)
 
-
-class ProductsStub(object):
-    """Missing associated documentation comment in .proto file."""
-
-    def __init__(self, channel):
-        """Constructor.
-
-        Args:
-            channel: A grpc.Channel.
-        """
-        self.GetProducts = channel.unary_stream(
-                '/Products/GetProducts',
-                request_serializer=coincide__pb2.Void.SerializeToString,
-                response_deserializer=coincide__pb2.LoadedProducts.FromString,
-                )
-
-
-class ProductsServicer(object):
-    """Missing associated documentation comment in .proto file."""
-
-    def GetProducts(self, request, context):
-        """Missing associated documentation comment in .proto file."""
-        context.set_code(grpc.StatusCode.UNIMPLEMENTED)
-        context.set_details('Method not implemented!')
-        raise NotImplementedError('Method not implemented!')
-
-
-def add_ProductsServicer_to_server(servicer, server):
-    rpc_method_handlers = {
-            'GetProducts': grpc.unary_stream_rpc_method_handler(
-                    servicer.GetProducts,
-                    request_deserializer=coincide__pb2.Void.FromString,
-                    response_serializer=coincide__pb2.LoadedProducts.SerializeToString,
-            ),
-    }
-    generic_handler = grpc.method_handlers_generic_handler(
-            'Products', rpc_method_handlers)
-    server.add_generic_rpc_handlers((generic_handler,))
-
-
- # This class is part of an EXPERIMENTAL API.
-class Products(object):
-    """Missing associated documentation comment in .proto file."""
-
     @staticmethod
-    def GetProducts(request,
+    def GetPrices(request,
             target,
             options=(),
             channel_credentials=None,
@@ -181,8 +186,8 @@ class Products(object):
             wait_for_ready=None,
             timeout=None,
             metadata=None):
-        return grpc.experimental.unary_stream(request, target, '/Products/GetProducts',
-            coincide__pb2.Void.SerializeToString,
-            coincide__pb2.LoadedProducts.FromString,
+        return grpc.experimental.unary_unary(request, target, '/Info/GetPrices',
+            insights__pb2.PricesRequest.SerializeToString,
+            insights__pb2.RawPriceResponse.FromString,
             options, channel_credentials,
             insecure, call_credentials, compression, wait_for_ready, timeout, metadata)

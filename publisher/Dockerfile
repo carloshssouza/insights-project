@@ -1,4 +1,4 @@
-FROM python
+FROM python:3.8-slim
 
 RUN mkdir /service
 COPY publisher/ /service/publisher/

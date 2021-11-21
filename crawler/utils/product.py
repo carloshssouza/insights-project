@@ -60,7 +60,6 @@ class Product:
     def pension_fund_builder(self, base):
         month_ret = self.product.get("Rent. Mês").replace(",", ".")
         adm_tax = sub(r'[^\d.]', '', self.product.get("Taxa Adm.", "-1"))
-        print(adm_tax)
         min_app = sub(r'[^\d.]', '', self.product.get("Aplic. Mín.", "-1"))
         pension_fund = {
             "min_application": float(min_app.replace(".", "").replace(",", ".")) if min_app and min_app != "N/D" else -1,

@@ -1,5 +1,3 @@
-from __future__ import print_function
-
 import os
 from flask import Flask, request, jsonify, Response
 from flask_cors import CORS, cross_origin
@@ -55,7 +53,7 @@ def portfolio_list(id_):
         response = list()
         client = Client.query.filter_by(id=id_).first()
         for portfolio in client.portfolios:
-            response.append(parse_portfolio(portfolio))
+            response.append(jsonify(parse_portfolio(portfolio)))
         graphs["h"].observe(time.time() - start)
         return response
     except Exception as e:
@@ -70,7 +68,7 @@ def portfolio_get_by_id(id_):
     start = time.time()
     try:
         portfolio = Portfolio.query.filter_by(id=id_).first()
-        response = parse_portfolio(portfolio)
+        response = jsonify(parse_portfolio(portfolio))
         graphs["h"].observe(time.time() - start)
         return response
     except Exception as e:
@@ -104,7 +102,7 @@ def portfolio_update(id_):
         portfolio_input = request.get_json()
         portfolio = Portfolio.query.filter_by(id=id_).update(dict(**portfolio_input))
         db.session.commit()
-        response = parse_portfolio(portfolio)
+        response = jsonify(parse_portfolio(portfolio))
         graphs["h"].observe(time.time() - start)
         return response
     except Exception as e:
@@ -120,7 +118,7 @@ def portfolio_remove(id_):
     try:
         portfolio = Portfolio.query.filter_by(id=id_).update(dict(status=0))
         db.session.commit()
-        response = parse_portfolio(portfolio)
+        response = jsonify(parse_portfolio(portfolio))
         graphs["h"].observe(time.time() - start)
         return response
     except Exception as e:
@@ -137,14 +135,16 @@ def portfolio_recommend():
         _request = request.get_json()
         portfolio_id = int(_request.get("portfolio_id"))
         portfolio = Portfolio.query.filter_by(id=portfolio_id).first()
-        mail_list = []
+        client_info = []
         for _id in _request.get("client_ids", []):
             client = Client.query.filter_by(id=_id).first()
-            mail_list.append(client.email)
+            client_info.append(client.serialize())
             client.portfolios.append(portfolio)
+            db.session.add(client)
         db.session.commit()
         _portfolio = parse_portfolio(portfolio)
-        send_notifications(_portfolio, mail_list)
+        import json
+        send_notifications(json.dumps(_portfolio), client_info)
         graphs["h"].observe(time.time() - start)
         return "Success"
     except Exception as e:
@@ -167,7 +167,7 @@ def product_add():
             db.session.add(portfolio)
         db.session.commit()
         graphs["h"].observe(time.time() - start)
-        return "Products Added"
+        return Response("Products Added")
     except Exception as e:
         graphs["e"].inc()
         return str(e)
@@ -188,8 +188,7 @@ def portfolio_metrics():
             _p.pop("portfolio_id", None)
             amount += _p.get("amount", 0)
             products.append(_p)
-        print(products, file=sys.stderr)
-        metrics = get_portfolio_metrics({"start_date": product_input["end_date"],
+        metrics = get_portfolio_metrics({"start_date": product_input["start_date"],
                                          "end_date": product_input["end_date"],
                                          "amount": amount,
                                          "products": products})
@@ -203,7 +202,6 @@ def portfolio_metrics():
 def parse_portfolio(portfolio):
     _portfolio = portfolio.serialize()
     _portfolio["products"] = [p.serialize() for p in portfolio.products]
-    _portfolio = jsonify(_portfolio)
     return _portfolio
 
 

@@ -22,5 +22,5 @@ scrape_configs:
   - job_name: metrics
     static_configs:
       - targets:
-          - 'metrics_service:9999'
-          - 'prices_service:8888'
+          - 'metrics_service:9998'
+          - 'prices_service:8889'
