@@ -197,7 +197,7 @@ class Portfolio(Product):
         weights = self.optimal_weights(n_points, er, cov)
         rets = [self.portfolio_return_ef(w, er) for w in weights]
         vols = [self.portfolio_volatility_ef(w, cov) for w in weights]
-        ef["Efficient Frontier (EF)"] = pd.DataFrame({"Returns": rets, "Volatility": vols})
+        ef["Efficient Frontier (EF)"] = {"Returns": rets, "Volatility": vols}
 
         num_assets = er.shape[0]
 
@@ -205,21 +205,21 @@ class Portfolio(Product):
             weights_msr = self.msr(er, cov)
             ret_msr = self.portfolio_return_ef(weights_msr, er)
             vol_msr = self.portfolio_volatility_ef(weights_msr, cov)
-            ef["Capital Market Line (CML)"] = pd.DataFrame({"Returns": [RISK_FREE_RATE, ret_msr], "Volatility": [0, vol_msr]})
+            ef["Capital Market Line (CML)"] = {"Returns": [RISK_FREE_RATE, ret_msr], "Volatility": [0, vol_msr]}
             ef["CML Weights"] = weights_msr.tolist()
 
         if ew:
             weights_ew = np.repeat(1 / num_assets, num_assets)
             rets_ew = self.portfolio_return_ef(weights_ew, er)
             vol_ew = self.portfolio_volatility_ef(weights_ew, cov)
-            ef["Equally Weighted (EW)"] = pd.DataFrame({"Returns": [rets_ew], "Volatility": [vol_ew]})
+            ef["Equally Weighted (EW)"] = {"Returns": [rets_ew], "Volatility": [vol_ew]}
             ef["EW Weights"] = weights_ew.tolist()
 
         if gmv:
             weights_gmv = self.global_minimum_variance(cov)
             rets_gmv = self.portfolio_return_ef(weights_gmv, er)
             vol_gmv = self.portfolio_volatility_ef(weights_gmv, cov)
-            ef["Global Minimum Variance (GMV)"] = pd.DataFrame({"Returns": [rets_gmv], "Volatility": [vol_gmv]})
+            ef["Global Minimum Variance (GMV)"] = {"Returns": [rets_gmv], "Volatility": [vol_gmv]}
             ef["GMV Weights"] = weights_gmv.tolist()
 
         return ef

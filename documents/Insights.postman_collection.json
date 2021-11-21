@@ -57,14 +57,14 @@
 				"method": "GET",
 				"header": [],
 				"url": {
-					"raw": "localhost:5001/client/1",
+					"raw": "localhost:5001/client/2",
 					"host": [
 						"localhost"
 					],
 					"port": "5001",
 					"path": [
 						"client",
-						"1"
+						"2"
 					]
 				}
 			},
@@ -77,7 +77,7 @@
 				"header": [],
 				"body": {
 					"mode": "raw",
-					"raw": "{\r\n    \"cpf\": \"updated\",\r\n    \"name\": \"self.name.updated\",\r\n    \"username\": \"updated\"\r\n}",
+					"raw": "{\r\n    \"cpf\": \"updated\",\r\n    \"name\": \"self.name.updated\"\r\n}",
 					"options": {
 						"raw": {
 							"language": "json"
@@ -85,7 +85,7 @@
 					}
 				},
 				"url": {
-					"raw": "localhost:5001/client/update/1",
+					"raw": "localhost:5001/client/update/2",
 					"host": [
 						"localhost"
 					],
@@ -93,7 +93,7 @@
 					"path": [
 						"client",
 						"update",
-						"1"
+						"2"
 					]
 				}
 			},
@@ -287,13 +287,13 @@
 			"response": []
 		},
 		{
-			"name": "Assets - Historic",
+			"name": "Portfolio - Recommend",
 			"request": {
 				"method": "POST",
 				"header": [],
 				"body": {
 					"mode": "raw",
-					"raw": "{\"symbols\": [\"ITSA4.SA\"]}",
+					"raw": "{\r\n    \"portfolio_id\": 1,\r\n    \"client_ids\": [2]\r\n}",
 					"options": {
 						"raw": {
 							"language": "json"
@@ -301,14 +301,14 @@
 					}
 				},
 				"url": {
-					"raw": "localhost:5003/assets/historic",
+					"raw": "localhost:5004/portfolio/recommend",
 					"host": [
 						"localhost"
 					],
-					"port": "5003",
+					"port": "5004",
 					"path": [
-						"assets",
-						"historic"
+						"portfolio",
+						"recommend"
 					]
 				}
 			},
@@ -340,7 +340,7 @@
 				"header": [],
 				"body": {
 					"mode": "raw",
-					"raw": "{\r\n    \"name\": \"Portfolio Test\",\r\n    \"amount\": 1241.204,\r\n    \"status\": 1,\r\n    \"advisor_id\": 1\r\n}",
+					"raw": "{\r\n    \"name\": \"Portfolio Test\",\r\n    \"amount\": 1241.204,\r\n    \"status\": 1,\r\n    \"advisor_id\": 1,\r\n    \"products\": []\r\n}",
 					"options": {
 						"raw": {
 							"language": "json"

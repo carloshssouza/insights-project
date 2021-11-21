@@ -4,10 +4,14 @@ from concurrent import futures
 import json
 import pandas as pd
 import yfinance as yf
+from py_grpc_prometheus.prometheus_server_interceptor import PromServerInterceptor
+from prometheus_client import start_http_server
 
 from insights_pb2 import InfoResponse, RawPriceResponse
 import insights_pb2_grpc as grpc_service
+import logging
 
+logger = logging.getLogger("app")
 
 prices_port = os.environ.get("PRICES_PORT", "8888")
 
@@ -33,6 +37,7 @@ def simple_historical(symbols, start_date, end_date):
         ticker = yf.Ticker(symbol)
         hist = ticker.history(start=start_date, end=end_date)
         adj_close[symbol] = hist["Close"]
+    adj_close["date"] = adj_close.index.astype(str)
     return adj_close.to_dict(orient="records")
 
 
@@ -55,21 +60,24 @@ def response_builder(name, series):
 
 
 def server_setup():
-    server = grpc.server(futures.ThreadPoolExecutor(max_workers=10))
+    server = grpc.server(futures.ThreadPoolExecutor(max_workers=10),
+                         interceptors=(PromServerInterceptor(),))
     grpc_service.add_InfoServicer_to_server(InfoServicer(), server)
     server.add_insecure_port(f"prices_service:{prices_port}")
+    start_http_server(8889)
     try:
         server.start()
-        print(f"Server is running on prices_service:{prices_port}")
+        logger.info(f"Server is running on prices_service:{prices_port}")
         server.wait_for_termination()
     except KeyboardInterrupt:
-        print("Stopping prices service")
+        logger.info("Stopping prices service")
         server.stop(0)
 
 
 class InfoServicer(grpc_service.InfoServicer):
     def GetInfo(self, request, context):
         ticker = yf.Ticker(request.ticker)
+        logger.info(f"Getting info: {request.ticker}")
         series = get_series(ticker, request.start_date, request.end_date)
         if not series:
             return InfoResponse()
@@ -79,6 +87,7 @@ class InfoServicer(grpc_service.InfoServicer):
 
     def GetPrices(self, request, context):
         records = simple_historical(request.tickers, request.start_date, request.end_date)
+        logger.info(f"Getting prices: {request.tickers}")
         result = json.dumps(records)
         prices_response = RawPriceResponse()
         prices_response.raw = result
@@ -86,5 +95,5 @@ class InfoServicer(grpc_service.InfoServicer):
 
 
 if __name__ == "__main__":
-    print(f"Starting prices server on port {prices_port}")
+    logger.info(f"Starting prices server on port {prices_port}")
     server_setup()
