@@ -156,13 +156,13 @@ services:
         networks:
             - insights-network
 
-    dashboard_service:
-        build:
-            context: .
-            dockerfile: dashboard/Dockerfile
-        ports:
-            - 8501:8501
-        image: dashboard
+#    dashboard_service:
+#        build:
+#            context: .
+#            dockerfile: dashboard/Dockerfile
+#        ports:
+#            - 8501:8501
+#        image: dashboard
 
     front_portfolio:
         container_name: front_portfolio

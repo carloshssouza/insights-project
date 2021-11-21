@@ -39,16 +39,18 @@ def dashboard(results):
     portfolio_ef["Capital Market Line (CML)"] = pd.DataFrame(portfolio_ef["Capital Market Line (CML)"])
     portfolio_ef["Equally Weighted (EW)"] = pd.DataFrame(portfolio_ef["Equally Weighted (EW)"])
     st.markdown("<hr>", unsafe_allow_html=True)
+
     st.header("Basic Portfolio Time Series Measures")
+    y = ["Portfolio"]
     g_cols = st.beta_columns(2)
     g_cols[0].plotly_chart(line_scatter(close, close.columns, "Close Prices"), use_container_width=True)
     g_cols[1].plotly_chart(line_scatter(cum_ret*100, cum_ret.columns, "Cumulative Returns"), use_container_width=True)
-    g_cols[0].plotly_chart(bar_chart(portfolio_ret*100, [0], "Portfolio Daily Returns"), use_container_width=True)
-    g_cols[1].plotly_chart(line_scatter(portfolio_cum_ret*100, [0], "Portfolio Cumulative Returns"), use_container_width=True)
-    g_cols[0].plotly_chart(area_chart(portfolio_dd*100, [0], "Portfolio Drawdown"), use_container_width=True)
+    g_cols[0].plotly_chart(bar_chart(portfolio_ret*100, y, "Portfolio Daily Returns"), use_container_width=True)
+    g_cols[1].plotly_chart(line_scatter(portfolio_cum_ret*100, y, "Portfolio Cumulative Returns"), use_container_width=True)
+    g_cols[0].plotly_chart(area_chart(portfolio_dd*100, y, "Portfolio Drawdown"), use_container_width=True)
     g_cols[1].plotly_chart(area_chart(products_dd*100, products_dd.columns, "Assets Drawdown"), use_container_width=True)
     g_cols[0].plotly_chart(correlation_matrix(portfolio_corr), use_container_width=True)
-    g_cols[0].plotly_chart(line_scatter(portfolio_wi, [0], "Portfolio Wealth Index"), use_container_width=True)
+    g_cols[0].plotly_chart(line_scatter(portfolio_wi, y, "Portfolio Wealth Index"), use_container_width=True)
     g_cols[1].plotly_chart(line_scatter(products_wi, products_wi.columns, "Assets Wealth Index"), use_container_width=True)
     g_cols[1].plotly_chart(bar_chart(products_ret*100, products_ret.columns, "Products Daily Returns"), use_container_width=True)
 
@@ -68,7 +70,7 @@ def dashboard(results):
 
     for k, v in portfolio_ef.items():
         if isinstance(v, list):
-            comp = [f"{ticker}: {round(weight * 100, 2)}%" for ticker, weight in zip(_ids, v)]
+            comp = [f"{ticker}: {round(weight * 100, 2)}%" for ticker, weight in zip(products_ret.columns, v)]
             st.markdown(f"**{k} -** {comp}")
 
 
@@ -81,10 +83,11 @@ def get_metric(obj, name):
 
 
 def dashboard_compose():
+    query_params = {k: v[0] for k, v in st.experimental_get_query_params().items()}
     if query_params:
-        body = {"id": int(query_params["id"]),
-                "start_date": query_params["startDate"],
-                "end_date": query_params["endDate"]}
+        body = {"id": int(query_params["portfolio_id"]),
+                "start_date": query_params["start_date"],
+                "end_date": query_params["end_date"]}
         st.write(body)
         results = requests.post("http://localhost:5004/portfolio/metrics", json=body).json()
         if results:
@@ -95,6 +98,4 @@ def dashboard_compose():
         st.warning("Input information is required!")
 
 
-query_params = {k: v[0] for k, v in st.experimental_get_query_params().items()}
-st.write(query_params)
 dashboard_compose()
