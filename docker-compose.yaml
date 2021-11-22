@@ -156,13 +156,13 @@ services:
         networks:
             - insights-network
 
-#    dashboard_service:
-#        build:
-#            context: .
-#            dockerfile: dashboard/Dockerfile
-#        ports:
-#            - 8501:8501
-#        image: dashboard
+    dashboard_service:
+        build:
+            context: .
+            dockerfile: dashboard/Dockerfile
+        ports:
+            - 8501:8501
+        image: dashboard
 
     front_portfolio:
         container_name: front_portfolio
@@ -183,7 +183,7 @@ services:
           - 9000:9090
         volumes:
           - ./prometheus:/etc/prometheus
-          - prometheus-volume:/prometheus
+          - ./prometheus/prometheus-data:/prometheus
         command: --web.enable-lifecycle  --config.file=/etc/prometheus/prometheus.yml
         networks:
             - insights-network
@@ -195,14 +195,14 @@ services:
         restart: unless-stopped
         volumes:
             - ./grafana/provisioning/datasources:/etc/grafana/provisioning/datasources
-            - grafana-data:/var/lib/grafana
+            - ./grafana/grafana-data:/var/lib/grafana
         networks:
             - insights-network
 
 volumes:
     redis-volume:
     postgres-volume:
-    prometheus-volume:
+    prometheus-data:
     grafana-data:
     front-portfolio:
 
