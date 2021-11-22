@@ -44,18 +44,35 @@ def prometheus_metrics():
     return Response(res, mimetype="text/plain")
 
 
-@app.route("/portfolios/<id_>")
+@app.route("/portfolios/client/<id_>")
 @cross_origin()
-def portfolio_list(id_):
+def portfolio_client_list(id_):
     graphs["c"].inc()
     start = time.time()
     try:
         response = list()
         client = Client.query.filter_by(id=id_).first()
         for portfolio in client.portfolios:
-            response.append(jsonify(parse_portfolio(portfolio)))
+            response.append(parse_portfolio(portfolio))
         graphs["h"].observe(time.time() - start)
-        return response
+        return jsonify({"portfolios": response})
+    except Exception as e:
+        graphs["e"].inc()
+        return str(e)
+
+
+@app.route("/portfolios/advisor/<id_>")
+@cross_origin()
+def portfolio_advisor_list(id_):
+    graphs["c"].inc()
+    start = time.time()
+    try:
+        response = list()
+        portfolios = Portfolio.query.filter_by(advisor_id=id_)
+        for portfolio in portfolios:
+            response.append(parse_portfolio(portfolio))
+        graphs["h"].observe(time.time() - start)
+        return jsonify({"portfolios": response})
     except Exception as e:
         graphs["e"].inc()
         return str(e)
