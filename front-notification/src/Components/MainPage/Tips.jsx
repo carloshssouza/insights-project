@@ -7,35 +7,34 @@ const Tips = () => {
   const [status, setStatus] = useState(false);
 
   const [objectServer, setObjectServer] = useState(teste);
-  const serverURL = 'ws://publisher_service:8001/stream/products?email=$';
+  const serverURL = `ws://publisher_service:8001/stream/products?email=${email}`;
 
-  // const socket = socketIOClient(serverURL);
+  const socket = socketIOClient(serverURL);
 
-  /*
-  socket.on('infoEvent', (obj) => {
+
+  socket.on('*', (obj) => {
     setObjectServer(obj);
   });
-  */
 
-  /*
+
+
   useEffect(() => {
     console.log(objectServer);
   }, [objectServer]);
-  */
+
 
   function handleSubmit(event) {
     event.preventDefault();
 
     setStatus(true);
 
-    /*
-    fetch('http://localhost:8000/recommendation', {
+
+    fetch('http://notification_profile_service:8000/recommendation', {
       method: 'POST',
       body: email,
     })
       .then((response) => response.json())
       .then((json) => console.log(json));
-    */
   }
 
   return (

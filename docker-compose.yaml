@@ -179,6 +179,35 @@ services:
         networks:
             - insights-network
 
+    front_notification:
+        container_name: front_notification
+        build:
+            context: .
+            dockerfile: front-notification/Dockerfile
+        depends_on:
+            - publisher_service
+            - notification_profile_service
+        volumes:
+            - '.:/front-notification'
+            - '/front-notification/node_modules'
+        ports:
+            - 3002:3002
+        networks:
+            - insights-network
+
+    notification_profile_service:
+        container_name: notification_profile
+        build:
+            context: .
+            dockerfile: notification-profile/Dockerfile
+        depends_on:
+            - publisher_service
+            - redis_db
+        ports:
+            - 8000:8000
+        networks:
+            - insights-network
+
     prometheus:
         image: prom/prometheus:v2.21.0
         ports:

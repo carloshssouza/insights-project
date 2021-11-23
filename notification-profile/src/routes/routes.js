@@ -2,9 +2,8 @@ const express = require('express');
 const Redis = require('redis');
 
 const redisClient = Redis.createClient({
-    host: '127.0.0.1',
+    host: 'redis_db',
     no_ready_check: true,
-    auth_pass: 'root'
 });
 
 const routes = express.Router();
@@ -125,7 +124,7 @@ routes.post('/recommendation', async (req, res) => {
         if (req.body.email) {
             const io_publisher = require('socket.io-client');
             const node_client_ws = io_publisher(`ws://publisher_service:8001/stream/products?email=${req.body.email}&past_ms=86400000`);
-            await node_client_ws.on('publisherEvent', async (data) => {
+            await node_client_ws.on('*', async (data) => {
                 res.json(data)
             });
             setTimeout(async () => {

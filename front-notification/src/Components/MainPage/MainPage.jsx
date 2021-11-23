@@ -145,12 +145,13 @@ const MainPage = () => {
     event.preventDefault();
     console.log(form)
     
-    fetch('http://localhost:8000/registration', {
+    fetch('http://notification_profile_service:8000/registration', {
       method: 'POST',
       headers: {
         'Content-Type': 'application/json',
+        'Access-Control-Allow-Origin': '*'
       },
-      body: JSON.stringify(form),
+      body: form,
     })
       .then((response) => response.json())
       .then((json) => console.log(json));  
@@ -166,9 +167,9 @@ const MainPage = () => {
   ];
 
   const recommendationStocks = [
-    { value: 'Compra', label: 'Compra' },
-    { value: 'Venda', label: 'Venda' },
-    { value: 'Neutro', label: 'Neutro' },
+    { value: 'COMPRA', label: 'Compra' },
+    { value: 'VENDA', label: 'Venda' },
+    { value: 'NEUTRO', label: 'Neutro' },
   ];
 
   const segmentRSFRSF = [
@@ -235,12 +236,12 @@ const MainPage = () => {
             type="checkbox"
             onChange={handleChangeStocks}
           />
-          <span className="checkbox-main-page">Stocks</span>
+          <span className="checkbox-main-page">Ações</span>
         </label>
 
         {stocks && (
           <div className="div-true-main-page animeLeft">
-            <span className="input-true-main-page">Seguimento</span>
+            <span className="input-true-main-page">Segmento</span>
             <Select
               isMulti
               name="segment"
@@ -261,7 +262,7 @@ const MainPage = () => {
             />
 
             <label htmlFor="twelvemin">
-              <span className="input-true-main-page">12 Min</span>
+              <span className="input-true-main-page">Retorno Mínimo (12 meses)</span>
             </label>
             <input
               id="twelvemin"
@@ -273,7 +274,7 @@ const MainPage = () => {
             />
 
             <label htmlFor="twelvemax">
-              <span className="input-true-main-page">12 Max</span>
+              <span className="input-true-main-page">Retorno Máximo (12 meses)</span>
             </label>
             <input
               id="twelvemax"
@@ -285,7 +286,7 @@ const MainPage = () => {
             />
 
             <label htmlFor="dividendYieldmin">
-              <span className="input-true-main-page">Min Dividendo</span>
+              <span className="input-true-main-page">Dividendo Mínimo (%)</span>
             </label>
             <input
               id="dividendYieldmin"
@@ -297,7 +298,7 @@ const MainPage = () => {
             />
 
             <label htmlFor="dividendYieldmax">
-              <span className="input-true-main-page">Max Dividendo</span>
+              <span className="input-true-main-page">Dividendo Máximo (%)</span>
             </label>
             <input
               id="dividendYieldmax"
@@ -309,7 +310,7 @@ const MainPage = () => {
             />
 
             <label htmlFor="pricemin">
-              <span className="input-true-main-page">Min Preço</span>
+              <span className="input-true-main-page">Preço Mínimo</span>
             </label>
             <input
               id="pricemin"
@@ -321,7 +322,7 @@ const MainPage = () => {
             />
 
             <label htmlFor="pricemax">
-              <span className="input-true-main-page">Max Preço</span>
+              <span className="input-true-main-page">Preço Máximo</span>
             </label>
             <input
               id="pricemax"
@@ -340,12 +341,12 @@ const MainPage = () => {
             type="checkbox"
             onChange={handleChangeRealStateFunds}
           />
-          <span className="checkbox-main-page">Real State Funds</span>
+          <span className="checkbox-main-page">Fundos Imoboliários</span>
         </label>
 
         {realStateFunds && (
           <div className="div-true-main-page animeLeft">
-            <span className="input-true-main-page">Seguimento</span>
+            <span className="input-true-main-page">Segmento</span>
             <Select
               isMulti
               name="segmentRSF"
@@ -356,7 +357,7 @@ const MainPage = () => {
             />
 
             <label htmlFor="twelveminRSF">
-              <span className="input-true-main-page">12 Min</span>
+              <span className="input-true-main-page">Retorno Mínimo (12 meses)</span>
             </label>
             <input
               id="twelveminRSF"
@@ -368,7 +369,7 @@ const MainPage = () => {
             />
 
             <label htmlFor="twelvemaxRSF">
-              <span className="input-true-main-page">12 Max</span>
+              <span className="input-true-main-page">Retorno Máximo (12 meses)</span>
             </label>
             <input
               id="twelvemaxRSF"
@@ -380,7 +381,7 @@ const MainPage = () => {
             />
 
             <label htmlFor="dividendYieldminRSF">
-              <span className="input-true-main-page">Min Dividendo</span>
+              <span className="input-true-main-page">Dividendo Mínimo (%)</span>
             </label>
             <input
               id="dividendYieldminRSF"
@@ -392,7 +393,7 @@ const MainPage = () => {
             />
 
             <label htmlFor="dividendYieldmaxRSF">
-              <span className="input-true-main-page">Max Dividendo</span>
+              <span className="input-true-main-page">Dividendo Máximo (%)</span>
             </label>
             <input
               id="dividendYieldmaxRSF"
@@ -404,7 +405,7 @@ const MainPage = () => {
             />
 
             <label htmlFor="priceminRSF">
-              <span className="input-true-main-page">Min Preço</span>
+              <span className="input-true-main-page">Preço Mínimo</span>
             </label>
             <input
               id="priceminRSF"
@@ -416,7 +417,7 @@ const MainPage = () => {
             />
 
             <label htmlFor="pricemaxRSF">
-              <span className="input-true-main-page">Max Preço</span>
+              <span className="input-true-main-page">Preço Máximo</span>
             </label>
             <input
               id="pricemaxRSF"
@@ -461,7 +462,7 @@ const MainPage = () => {
             />
 
             <label htmlFor="deadlinemin">
-              <span className="input-true-main-page">Prazo Final Min</span>
+              <span className="input-true-main-page">Prazo Mínimo (meses)</span>
             </label>
             <input
               id="deadlinemin"
@@ -473,7 +474,7 @@ const MainPage = () => {
             />
 
             <label htmlFor="deadlinemax">
-              <span className="input-true-main-page">Prazo Final Max</span>
+              <span className="input-true-main-page">Prazo Máximo (meses)</span>
             </label>
             <input
               id="deadlinemax"
@@ -492,7 +493,7 @@ const MainPage = () => {
             type="checkbox"
             onChange={handleChangeInvestimentFunds}
           />
-          <span className="checkbox-main-page">Investiments Funds</span>
+          <span className="checkbox-main-page">Fundos de Investimento</span>
         </label>
 
         {investimentFunds && (
@@ -508,7 +509,7 @@ const MainPage = () => {
             />
 
             <label htmlFor="monthReturnminIF">
-              <span className="input-true-main-page">Mês de Retorno Min</span>
+              <span className="input-true-main-page">Retorno Mínimo (mês)</span>
             </label>
             <input
               id="monthReturnminIF"
@@ -520,7 +521,7 @@ const MainPage = () => {
             />
 
             <label htmlFor="monthReturnmaxIF">
-              <span className="input-true-main-page">Mês de Retorno Max</span>
+              <span className="input-true-main-page">Retorno Máximo (mês)</span>
             </label>
             <input
               id="monthReturnmaxIF"
@@ -556,7 +557,7 @@ const MainPage = () => {
             />
 
             <label htmlFor="admTaxminIF">
-              <span className="input-true-main-page">Taxa Min Adm</span>
+              <span className="input-true-main-page">Taxa de Administração Mínima</span>
             </label>
             <input
               id="admTaxminIF"
@@ -568,7 +569,7 @@ const MainPage = () => {
             />
 
             <label htmlFor="admTaxmaxIF">
-              <span className="input-true-main-page">Taxa Max Adm</span>
+              <span className="input-true-main-page">Taxa de Administração Máxima</span>
             </label>
             <input
               id="admTaxmaxIF"
@@ -587,13 +588,13 @@ const MainPage = () => {
             type="checkbox"
             onChange={handleChangePensionFunds}
           />
-          <span className="checkbox-main-page">Pension Funds</span>
+          <span className="checkbox-main-page">Fundos de Previdência</span>
         </label>
 
         {pensionFunds && (
           <div className="div-true-main-page animeLeft">
             <label htmlFor="monthReturnminPF">
-              <span className="input-true-main-page">Mês de Retorno Min</span>
+              <span className="input-true-main-page">Retorno Mínimo (mês)</span>
             </label>
             <input
               id="monthReturnminPF"
@@ -605,7 +606,7 @@ const MainPage = () => {
             />
 
             <label htmlFor="monthReturnmaxPF">
-              <span className="input-true-main-page">Mês de Retorno Max</span>
+              <span className="input-true-main-page">Retorno Máximo (mês)</span>
             </label>
             <input
               id="monthReturnmaxPF"
@@ -641,7 +642,7 @@ const MainPage = () => {
             />
 
             <label htmlFor="admTaxminPF">
-              <span className="input-true-main-page">Taxa Min Adm</span>
+              <span className="input-true-main-page">Taxa de Administração Mínima</span>
             </label>
             <input
               id="admTaxminPF"
@@ -653,7 +654,7 @@ const MainPage = () => {
             />
 
             <label htmlFor="admTaxmaxPF">
-              <span className="input-true-main-page">Taxa Max Adm</span>
+              <span className="input-true-main-page">Taxa de Administração Máxima</span>
             </label>
             <input
               id="admTaxmaxPF"
