@@ -3,6 +3,7 @@ import streamlit as st
 import pandas as pd
 import requests
 import ast
+import json
 
 st.set_page_config(layout='wide')
 
@@ -85,13 +86,20 @@ def get_metric(obj, name):
 def dashboard_compose():
     query_params = {k: v[0] for k, v in st.experimental_get_query_params().items()}
     if query_params:
-        body = {"id": int(query_params["portfolio_id"]),
-                "start_date": query_params["start_date"],
-                "end_date": query_params["end_date"]}
-        st.write(body)
-        results = requests.post("http://localhost:5004/portfolio/metrics", json=body).json()
-        if results:
-            dashboard(results)
+        url = "http://portfolio_service:5004/portfolio/metrics"
+
+        payload = json.dumps({
+            "id": int(query_params["portfolio_id"]),
+            "start_date": query_params["start_date"],
+            "end_date": query_params["end_date"]
+        })
+        headers = {
+            'Content-Type': 'application/json'
+        }
+
+        response = requests.request("POST", url, headers=headers, data=payload).json()
+        if response:
+            dashboard(response)
         else:
             st.error("Portfolio not found")
     else:

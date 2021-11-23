@@ -163,6 +163,8 @@ services:
         ports:
             - 8501:8501
         image: dashboard
+        networks:
+            - insights-network
 
     front_portfolio:
         container_name: front_portfolio
