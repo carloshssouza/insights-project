@@ -1,0 +1,17 @@
+{
+	"ulid": "01FN54X2SFK9V715QZBHT82FRC",
+	"minTime": 1637618400000,
+	"maxTime": 1637625600000,
+	"stats": {
+		"numSamples": 6032,
+		"numSeries": 499,
+		"numChunks": 499
+	},
+	"compaction": {
+		"level": 1,
+		"sources": [
+			"01FN54X2SFK9V715QZBHT82FRC"
+		]
+	},
+	"version": 1
+}
