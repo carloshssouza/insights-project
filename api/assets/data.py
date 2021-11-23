@@ -41,5 +41,7 @@ def list_assets():
     keys = r.list_redis_keys()
     symbols = []
     for k in keys:
-        symbols.append(k.decode("utf-8").split("}.")[1])
+        _key = k.decode("utf-8").split("}.")
+        if len(_key) > 1:
+            symbols.append(_key[1])
     return list(set(symbols))
