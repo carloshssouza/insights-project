@@ -32,7 +32,7 @@ def category_xp(target: str) -> list:
                 continue
         _product["ticker"] = product.h4.text if categories[target][0] != "Fundos Imobiliários" \
             else product.h4.text.split("-")[1].strip()
-        _product["Nome"] = f"{product.h4.text} - {_product['ticker']}"
+        _product["Nome"] = f"{_product['ticker']}"
         _product["Informações"] = product.a["href"]
         _product["category_builder"] = categories[target][1]
         _product["category"] = categories[target][0]
