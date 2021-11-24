@@ -8,6 +8,9 @@ __pycache__/
 
 # Distribution / packaging
 .node_modules
+notification-profile/node-modules
+notification-profile/src/node-modules
+front-notification/node-modules
 .idea
 .Python
 build/
