@@ -39,8 +39,8 @@ class Filter:
             products = ast.literal_eval(self.messages[0]["payload"].get("products", []))
             for msg in products:
                 _filter_type = _filter_map[msg["category"]]
-                is_desired = user_filter.get(_filter_type)
-                if not is_desired:
+                is_desired = user_filter.get(_filter_type, False)
+                if isinstance(is_desired, bool):
                     continue
                 result = self.filter_data(msg, user_filter[_filter_type])
                 if result:
@@ -51,7 +51,9 @@ class Filter:
     @staticmethod
     def filter_data(message, conditions):
         is_valid = True
-        if len(conditions.items() == 0):
+        logger.info(message)
+        logger.info(conditions)
+        if not conditions:
             return message
         for key, value in conditions.items():
             if key in message:

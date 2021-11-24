@@ -1,5 +1,4 @@
 import React, { useState, useEffect } from 'react';
-import socketIOClient from 'socket.io-client';
 import teste from './teste.json';
 
 const Tips = () => {
@@ -7,13 +6,13 @@ const Tips = () => {
   const [status, setStatus] = useState(false);
 
   const [objectServer, setObjectServer] = useState(teste);
-  const serverURL = `ws://localhost:8001/stream/products?email=${email}`;
-
-  const socket = socketIOClient(serverURL);
-
-  socket.on('*', (obj) => {
-    setObjectServer(obj);
-  });
+  // const serverURL = `ws://localhost:8001/stream/products?email=${email}`;
+  //
+  // const socket = socketIOClient(serverURL);
+  //
+  // socket.on('*', (obj) => {
+  //   setObjectServer(obj);
+  // });
 
   useEffect(() => {
     console.log(objectServer);
@@ -45,7 +44,15 @@ const Tips = () => {
       body: JSON.stringify({email: event.target[0].value}),
     })
       .then((response) => response.json())
-      .then((json) => setObjectServer(json));
+      .then((json) => setObjectServer(json.message))
+      .then(function() {
+            const url = `ws://localhost:8001/stream/products?email=${event.target[0].value}`
+            const connection = new WebSocket(url)
+            connection.onmessage = e => {
+                console.log(e.data)
+                setObjectServer(JSON.parse(e.data))
+            }
+      })
   }
 
 

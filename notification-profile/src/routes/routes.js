@@ -23,7 +23,7 @@ routes.post("/registration", async (req, res) => {
 
         let data = {email}
 
-        if (JSON.stringify(stocks) === '{}') {
+        if (stocks) {
             for (let key in stocks) {
                 if (stocks[key] === null) {
                     delete stocks[key];
@@ -39,7 +39,7 @@ routes.post("/registration", async (req, res) => {
             }
             data.stocks = stocks
         }
-        if (JSON.stringify(realStateFunds) === '{}') {
+        if (realStateFunds) {
             for (let key in realStateFunds) {
                 if (realStateFunds[key] === null) {
                     delete realStateFunds[key];
@@ -55,7 +55,7 @@ routes.post("/registration", async (req, res) => {
             }
             data.realStateFunds = realStateFunds
         }
-        if (JSON.stringify(coe) === '{}') {
+        if (coe) {
             for (let key in coe) {
                 if (coe[key] === null) {
                     delete coe[key];
@@ -71,7 +71,7 @@ routes.post("/registration", async (req, res) => {
             }
             data.coe = coe
         }
-        if (JSON.stringify(investmentFunds) === '{}') {
+        if (investmentFunds) {
             for (let key in investmentFunds) {
                 if (investmentFunds[key] === null) {
                     delete investmentFunds[key];
@@ -87,7 +87,7 @@ routes.post("/registration", async (req, res) => {
             }
             data.investmentFunds = investmentFunds
         }
-        if (JSON.stringify(pensionFunds) === '{}') {
+        if (pensionFunds) {
             for (let key in pensionFunds) {
                 if (pensionFunds[key] === null) {
                     delete pensionFunds[key]
@@ -104,6 +104,13 @@ routes.post("/registration", async (req, res) => {
             data.pensionFunds = pensionFunds
         }
 
+        for (let key in data) {
+            console.log(key)
+            console.log(data[key])
+            if (JSON.stringify(data[key]) === '{}') {
+                delete data[key]
+            }
+        }
         redisClient.set(`user:${email}`, JSON.stringify(data));
         console.log(`user:${email}`)
         console.log(data)
@@ -123,6 +130,7 @@ routes.post('/recommendation', async (req, res) => {
             const connection = new WebSocket(url)
             connection.onmessage = e => {
                 console.log(e.data)
+                res.status(201).json({message: JSON.parse(e.data)})
             }
         } else {
             res.status(400).json({ message: 'Problem in the email' });

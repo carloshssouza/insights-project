@@ -31,10 +31,10 @@ _message =     {
     }
 
 def sender():
-    emails = list()
+    # emails = list()
     client = redis.Redis(host="localhost", port=6379)
-    cur = b'0'
-    x = client.get("user:lucasblazzi@unifei.edu.br")
+    # cur = b'0'
+    x = client.get("user:lucasblazzi@hotmail.com")
     print(x)
     # keys = client.scan(cur, match='user:*')
     # if keys:
