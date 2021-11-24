@@ -31,9 +31,18 @@ _message =     {
     }
 
 def sender():
+    emails = list()
     client = redis.Redis(host="localhost", port=6379)
-    client.xadd("products", _message)
-    #print(client.xread({"products": '$'}, count=1, block=0))
+    cur = b'0'
+    x = client.get("user:lucasblazzi@unifei.edu.br")
+    print(x)
+    # keys = client.scan(cur, match='user:*')
+    # if keys:
+    #     print(keys)
+    #     emails.append(keys[0].decode().split(":")[-1])
+    # print(emails)
+    # client.xadd("products", _message)
+    # print(client.xread({"products": '$'}, count=1, block=0))
 
 
 # sender()
@@ -46,4 +55,4 @@ def sender_email():
             _email[k] = str(v)
     client.xadd("portfolio", _email)
 
-sender_email()
+sender()

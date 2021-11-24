@@ -7,35 +7,47 @@ const Tips = () => {
   const [status, setStatus] = useState(false);
 
   const [objectServer, setObjectServer] = useState(teste);
-  const serverURL = `ws://publisher_service:8001/stream/products?email=${email}`;
+  const serverURL = `ws://localhost:8001/stream/products?email=${email}`;
 
   const socket = socketIOClient(serverURL);
-
 
   socket.on('*', (obj) => {
     setObjectServer(obj);
   });
 
-
-
   useEffect(() => {
     console.log(objectServer);
   }, [objectServer]);
 
+  // useEffect(() => {
+  //   console.log(email);
+  //   fetch('http://localhost:8000/recommendation', {
+  //     method: 'POST',
+  //     headers: {
+  //       'Content-Type': 'application/json',
+  //     },
+  //     body: JSON.stringify({email: email}),
+  //   })
+  //     .then((response) => response.json())
+  //     .then((json) => setObjectServer(json));
+  // }, [email]);
+
 
   function handleSubmit(event) {
     event.preventDefault();
-
     setStatus(true);
-
-
-    fetch('http://notification_profile_service:8000/recommendation', {
+    setEmail(event.target[0].value);
+    fetch('http://localhost:8000/recommendation', {
       method: 'POST',
-      body: email,
+      headers: {
+        'Content-Type': 'application/json',
+      },
+      body: JSON.stringify({email: event.target[0].value}),
     })
       .then((response) => response.json())
-      .then((json) => console.log(json));
+      .then((json) => setObjectServer(json));
   }
+
 
   return (
     <div className="div-tips">
@@ -54,7 +66,6 @@ const Tips = () => {
             required
             id="email"
             value={email}
-            onChange={(event) => setEmail(event.target.value)}
           />
           <button className="button-main-page">Enviar</button>
         </form>

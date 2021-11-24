@@ -6,10 +6,10 @@ logger = logging.getLogger("filter")
 
 _filter_map = {
     "Ações": "stocks",
-    "Fundos Imobiliários": "real_state",
+    "Fundos Imobiliários": "realStateFunds",
     "COE": "coe",
-    "Fundos de Investimento": "funds",
-    "Previdência Privada": "pension_funds"
+    "Fundos de Investimento": "investmentFunds",
+    "Previdência Privada": "pensionFunds"
 }
 
 
@@ -35,6 +35,7 @@ class Filter:
 
         for email in emails:
             user_filter = json.loads(await self.redis.get(f"user:{email}"))
+            logger.info(user_filter)
             products = ast.literal_eval(self.messages[0]["payload"].get("products", []))
             for msg in products:
                 _filter_type = _filter_map[msg["category"]]
@@ -50,6 +51,8 @@ class Filter:
     @staticmethod
     def filter_data(message, conditions):
         is_valid = True
+        if len(conditions.items() == 0):
+            return message
         for key, value in conditions.items():
             if key in message:
                 if isinstance(value, list):

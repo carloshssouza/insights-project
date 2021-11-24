@@ -2,7 +2,7 @@ const express = require('express');
 const Redis = require('redis');
 
 const redisClient = Redis.createClient({
-    host: 'redis_db',
+    host: '127.0.0.1',
     no_ready_check: true,
 });
 
@@ -14,13 +14,16 @@ routes.post("/registration", async (req, res) => {
             stocks,
             realStateFunds,
             coe,
-            investimentFunds,
+            investmentFunds,
             pensionFunds
         } = req.body
 
+        console.log(req.body);
         console.log(JSON.stringify(req.body));
 
-        if (stocks) {
+        let data = {email}
+
+        if (JSON.stringify(stocks) === '{}') {
             for (let key in stocks) {
                 if (stocks[key] === null) {
                     delete stocks[key];
@@ -28,15 +31,15 @@ routes.post("/registration", async (req, res) => {
                 if (Array.isArray(stocks[key]) && stocks[key].length === 0) {
                     delete stocks[key];
                 } else if(Array.isArray(stocks[key]) && stocks[key].length > 0) {
-                    console.log("entrou1")
                     const value = stocks[key].map((element) => {
                         return element.value
                     })
                     stocks[key] = value;
                 }
             }
+            data.stocks = stocks
         }
-        if (realStateFunds) {
+        if (JSON.stringify(realStateFunds) === '{}') {
             for (let key in realStateFunds) {
                 if (realStateFunds[key] === null) {
                     delete realStateFunds[key];
@@ -44,15 +47,15 @@ routes.post("/registration", async (req, res) => {
                 if (Array.isArray(realStateFunds[key]) && realStateFunds[key].length === 0) {
                     delete realStateFunds[key];
                 } else if(Array.isArray(realStateFunds[key]) && realStateFunds[key].length > 0){
-                    console.log("entrou2")
                     const value = realStateFunds[key].map((element) => {
                         return element.value
                     })
                     realStateFunds[key] = value;
                 }
             }
+            data.realStateFunds = realStateFunds
         }
-        if (coe) {
+        if (JSON.stringify(coe) === '{}') {
             for (let key in coe) {
                 if (coe[key] === null) {
                     delete coe[key];
@@ -60,31 +63,31 @@ routes.post("/registration", async (req, res) => {
                 if (Array.isArray(coe[key]) && coe[key].length === 0) {
                     delete coe[key];
                 } else if(Array.isArray(coe[key]) && coe[key].length > 0) {
-                    console.log("entrou3")
                     const value = coe[key].map((element) => {
                         return element.value
                     })
                     coe[key] = value;
                 }
             }
+            data.coe = coe
         }
-        if (investimentFunds) {
-            for (let key in investimentFunds) {
-                if (investimentFunds[key] === null) {
-                    delete investimentFunds[key];
+        if (JSON.stringify(investmentFunds) === '{}') {
+            for (let key in investmentFunds) {
+                if (investmentFunds[key] === null) {
+                    delete investmentFunds[key];
                 }
-                if (Array.isArray(investimentFunds[key]) && investimentFunds[key].length === 0) {
-                    delete investimentFunds[key];
-                } else if(Array.isArray(investimentFunds[key]) && investimentFunds[key].length > 0) {
-                    console.log("entrou1")
-                    const value = investimentFunds[key].map((element) => {
+                if (Array.isArray(investmentFunds[key]) && investmentFunds[key].length === 0) {
+                    delete investmentFunds[key];
+                } else if(Array.isArray(investmentFunds[key]) && investmentFunds[key].length > 0) {
+                    const value = investmentFunds[key].map((element) => {
                         return element.value
                     })
-                    investimentFunds[key] = value;
+                    investmentFunds[key] = value;
                 }
             }
+            data.investmentFunds = investmentFunds
         }
-        if (pensionFunds) {
+        if (JSON.stringify(pensionFunds) === '{}') {
             for (let key in pensionFunds) {
                 if (pensionFunds[key] === null) {
                     delete pensionFunds[key]
@@ -92,25 +95,18 @@ routes.post("/registration", async (req, res) => {
                 if (Array.isArray(pensionFunds[key]) && pensionFunds[key].length === 0) {
                     delete pensionFunds[key];
                 } else if (Array.isArray(pensionFunds[key]) && pensionFunds[key].length > 0) {
-                    console.log("entrou1")
                     const value = pensionFunds[key].map((element) => {
                         return element.value
                     })
                     pensionFunds[key] = value;
                 }
             }
-        }
-
-        const data = {
-            email,
-            stocks,
-            realStateFunds,
-            coe,
-            investimentFunds,
-            pensionFunds
+            data.pensionFunds = pensionFunds
         }
 
         redisClient.set(`user:${email}`, JSON.stringify(data));
+        console.log(`user:${email}`)
+        console.log(data)
         res.status(201).json({message: 'Registrado com sucesso'})
     } catch (error) {
         console.error(error)
@@ -123,13 +119,15 @@ routes.post('/recommendation', async (req, res) => {
         // Socket to emit to publisher server
         if (req.body.email) {
             const io_publisher = require('socket.io-client');
-            const node_client_ws = io_publisher(`ws://publisher_service:8001/stream/products?email=${req.body.email}&past_ms=86400000`);
+            const node_client_ws = io_publisher(`ws://localhost:8001/stream/products?email=${req.body.email}&past_ms=86400000`);
             await node_client_ws.on('*', async (data) => {
+                console.log(data)
                 res.json(data)
             });
             setTimeout(async () => {
+                console.log("closing socket")
                 await node_client_ws.disconnect()
-            }, 1000);
+            }, 10000000);
         } else {
             res.status(400).json({ message: 'Problem in the email' });
         }
@@ -138,4 +136,4 @@ routes.post('/recommendation', async (req, res) => {
     }
 })
 
-module.exports = routes;
+module.exports = routes

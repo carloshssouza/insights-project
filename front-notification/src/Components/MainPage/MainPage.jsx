@@ -7,7 +7,7 @@ const MainPage = () => {
   const [stocks, setStocks] = useState(false);
   const [realStateFunds, setRealStateFunds] = useState(false);
   const [coe, setCoe] = useState(false);
-  const [investimentFunds, setInvestimentFunds] = useState(false);
+  const [investmentFunds, setInvestmentFunds] = useState(false);
   const [pensionFunds, setPensionFunds] = useState(false);
 
   const [email, setEmail] = useState(null);
@@ -36,11 +36,11 @@ const MainPage = () => {
     }
   }
 
-  function handleChangeInvestimentFunds({ target }) {
+  function handleChangeInvestmentFunds({ target }) {
     if (target.checked) {
-      setInvestimentFunds(true);
+      setInvestmentFunds(true);
     } else {
-      setInvestimentFunds(false);
+      setInvestmentFunds(false);
     }
   }
 
@@ -122,7 +122,7 @@ const MainPage = () => {
       deadline_min: deadlinemin,
       deadline_max: deadlinemax,
     },
-    investimentFunds: {
+    investmentFunds: {
       min_application_min: applicationminIF,
       min_application_max: applicationmaxIF,
       adm_tax_min: admTaxminIF,
@@ -141,20 +141,19 @@ const MainPage = () => {
     },
   };
 
-  function handleSubmit(event) {
+function handleSubmit(event) {
     event.preventDefault();
     console.log(form)
-    
-    fetch('http://notification_profile_service:8000/registration', {
+
+    fetch('http://localhost:8000/registration', {
       method: 'POST',
       headers: {
         'Content-Type': 'application/json',
-        'Access-Control-Allow-Origin': '*'
       },
-      body: form,
+      body: JSON.stringify(form),
     })
       .then((response) => response.json())
-      .then((json) => console.log(json));  
+      .then((json) => console.log(json));
   }
 
   const segmentStocks = [
@@ -491,12 +490,12 @@ const MainPage = () => {
           <input
             className="checkbox-main-page"
             type="checkbox"
-            onChange={handleChangeInvestimentFunds}
+            onChange={handleChangeInvestmentFunds}
           />
           <span className="checkbox-main-page">Fundos de Investimento</span>
         </label>
 
-        {investimentFunds && (
+        {investmentFunds && (
           <div className="div-true-main-page animeLeft">
             <span className="input-true-main-page">Classificação</span>
             <Select
