@@ -115,19 +115,15 @@ routes.post("/registration", async (req, res) => {
 })
 
 routes.post('/recommendation', async (req, res) => {
+    const WebSocket = require('ws');
     try {
         // Socket to emit to publisher server
         if (req.body.email) {
-            const io_publisher = require('socket.io-client');
-            const node_client_ws = io_publisher(`ws://localhost:8001/stream/products?email=${req.body.email}&past_ms=86400000`);
-            await node_client_ws.on('*', async (data) => {
-                console.log(data)
-                res.json(data)
-            });
-            setTimeout(async () => {
-                console.log("closing socket")
-                await node_client_ws.disconnect()
-            }, 10000000);
+            const url = `ws://localhost:8001/stream/products?email=${req.body.email}&past_ms=86400000`
+            const connection = new WebSocket(url)
+            connection.onmessage = e => {
+                console.log(e.data)
+            }
         } else {
             res.status(400).json({ message: 'Problem in the email' });
         }
