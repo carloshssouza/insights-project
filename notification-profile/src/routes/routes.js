@@ -132,6 +132,9 @@ routes.post('/recommendation', async (req, res) => {
                 console.log(e.data)
                 res.status(201).json({message: JSON.parse(e.data)})
             }
+            setTimeout(() => {
+                connection.close();
+            }, 6000)
         } else {
             res.status(400).json({ message: 'Problem in the email' });
         }
