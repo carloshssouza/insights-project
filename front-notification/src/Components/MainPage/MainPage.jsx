@@ -2,12 +2,13 @@ import React, { useState } from 'react';
 import './styles.css';
 import '../../App.css';
 import Select from 'react-select';
+import verificationForm from '../../funcHolders';
 
 const MainPage = () => {
   const [stocks, setStocks] = useState(false);
   const [realStateFunds, setRealStateFunds] = useState(false);
   const [coe, setCoe] = useState(false);
-  const [investmentFunds, setInvestmentFunds] = useState(false);
+  const [investimentFunds, setInvestimentFunds] = useState(false);
   const [pensionFunds, setPensionFunds] = useState(false);
 
   const [email, setEmail] = useState(null);
@@ -36,11 +37,11 @@ const MainPage = () => {
     }
   }
 
-  function handleChangeInvestmentFunds({ target }) {
+  function handleChangeInvestimentFunds({ target }) {
     if (target.checked) {
-      setInvestmentFunds(true);
+      setInvestimentFunds(true);
     } else {
-      setInvestmentFunds(false);
+      setInvestimentFunds(false);
     }
   }
 
@@ -122,7 +123,7 @@ const MainPage = () => {
       deadline_min: deadlinemin,
       deadline_max: deadlinemax,
     },
-    investmentFunds: {
+    investimentFunds: {
       min_application_min: applicationminIF,
       min_application_max: applicationmaxIF,
       adm_tax_min: admTaxminIF,
@@ -141,9 +142,18 @@ const MainPage = () => {
     },
   };
 
-function handleSubmit(event) {
+  verificationFormionForm(
+    form,
+    stocks,
+    realStateFunds,
+    coe,
+    investimentFunds,
+    pensionFunds
+  );
+
+  function handleSubmit(event) {
     event.preventDefault();
-    console.log(form)
+    console.log(form);
 
     fetch('http://localhost:8000/registration', {
       method: 'POST',
@@ -261,7 +271,9 @@ function handleSubmit(event) {
             />
 
             <label htmlFor="twelvemin">
-              <span className="input-true-main-page">Retorno Mínimo (12 meses)</span>
+              <span className="input-true-main-page">
+                Retorno Mínimo (12 meses)
+              </span>
             </label>
             <input
               id="twelvemin"
@@ -273,7 +285,9 @@ function handleSubmit(event) {
             />
 
             <label htmlFor="twelvemax">
-              <span className="input-true-main-page">Retorno Máximo (12 meses)</span>
+              <span className="input-true-main-page">
+                Retorno Máximo (12 meses)
+              </span>
             </label>
             <input
               id="twelvemax"
@@ -356,7 +370,9 @@ function handleSubmit(event) {
             />
 
             <label htmlFor="twelveminRSF">
-              <span className="input-true-main-page">Retorno Mínimo (12 meses)</span>
+              <span className="input-true-main-page">
+                Retorno Mínimo (12 meses)
+              </span>
             </label>
             <input
               id="twelveminRSF"
@@ -368,7 +384,9 @@ function handleSubmit(event) {
             />
 
             <label htmlFor="twelvemaxRSF">
-              <span className="input-true-main-page">Retorno Máximo (12 meses)</span>
+              <span className="input-true-main-page">
+                Retorno Máximo (12 meses)
+              </span>
             </label>
             <input
               id="twelvemaxRSF"
@@ -490,12 +508,12 @@ function handleSubmit(event) {
           <input
             className="checkbox-main-page"
             type="checkbox"
-            onChange={handleChangeInvestmentFunds}
+            onChange={handleChangeInvestimentFunds}
           />
           <span className="checkbox-main-page">Fundos de Investimento</span>
         </label>
 
-        {investmentFunds && (
+        {investimentFunds && (
           <div className="div-true-main-page animeLeft">
             <span className="input-true-main-page">Classificação</span>
             <Select
@@ -556,7 +574,9 @@ function handleSubmit(event) {
             />
 
             <label htmlFor="admTaxminIF">
-              <span className="input-true-main-page">Taxa de Administração Mínima</span>
+              <span className="input-true-main-page">
+                Taxa de Administração Mínima
+              </span>
             </label>
             <input
               id="admTaxminIF"
@@ -568,7 +588,9 @@ function handleSubmit(event) {
             />
 
             <label htmlFor="admTaxmaxIF">
-              <span className="input-true-main-page">Taxa de Administração Máxima</span>
+              <span className="input-true-main-page">
+                Taxa de Administração Máxima
+              </span>
             </label>
             <input
               id="admTaxmaxIF"
@@ -641,7 +663,9 @@ function handleSubmit(event) {
             />
 
             <label htmlFor="admTaxminPF">
-              <span className="input-true-main-page">Taxa de Administração Mínima</span>
+              <span className="input-true-main-page">
+                Taxa de Administração Mínima
+              </span>
             </label>
             <input
               id="admTaxminPF"
@@ -653,7 +677,9 @@ function handleSubmit(event) {
             />
 
             <label htmlFor="admTaxmaxPF">
-              <span className="input-true-main-page">Taxa de Administração Máxima</span>
+              <span className="input-true-main-page">
+                Taxa de Administração Máxima
+              </span>
             </label>
             <input
               id="admTaxmaxPF"
