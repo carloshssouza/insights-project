@@ -236,6 +236,7 @@ volumes:
     prometheus-data:
     grafana-data:
     front-portfolio:
+    mongo-volume:
 
 networks:
     insights-network:

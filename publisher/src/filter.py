@@ -46,6 +46,7 @@ class Filter:
                 if result:
                     result["email"] = email
                     results.append(result)
+            logger.info(f"----- {len(results)} FILTRADOS PARA O EMAIL {email} -----")
         return results
 
     @staticmethod
@@ -60,18 +61,23 @@ class Filter:
                 if isinstance(value, list):
                     if message[key] not in value:
                         is_valid = False
+                        logger.info(f"[{message['name']}] não satisfeito por {key}")
                         break
                 elif "min" in key:
                     if float(message[key]) < value:
                         is_valid = False
+                        logger.info(f"[{message['name']}] não satisfeito por {key}")
                         break
                 elif "max" in key:
                     if float(message[key]) > value:
                         is_valid = False
+                        logger.info(f"[{message['name']}] não satisfeito por {key}")
                         break
                 else:
                     if message[key] != value:
                         is_valid = False
+                        logger.info(f"[{message['name']}] não satisfeito por {key}")
                         break
 
+        logger.info(f"[{message['name']}] satisfaz os filtros")
         return message if is_valid else None

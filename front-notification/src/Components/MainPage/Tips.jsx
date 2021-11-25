@@ -30,6 +30,15 @@ const Tips = () => {
   //     .then((response) => response.json())
   //     .then((json) => setObjectServer(json));
   // }, [email]);
+  useEffect(() => {
+    if (email) {
+      let url = `ws://localhost:8001/stream/products?email=${email}`
+      const connection = new WebSocket(url)
+      connection.onmessage = e => {
+        console.log(e.data)
+        setObjectServer(JSON.parse(e.data))
+      }
+  }  }, [email])
 
 
   function handleSubmit(event) {
@@ -45,14 +54,6 @@ const Tips = () => {
     })
       .then((response) => response.json())
       .then((json) => setObjectServer(json.message))
-      .then(function() {
-            const url = `ws://localhost:8001/stream/products?email=${event.target[0].value}`
-            const connection = new WebSocket(url)
-            connection.onmessage = e => {
-                console.log(e.data)
-                setObjectServer(JSON.parse(e.data))
-            }
-      })
   }
 
 
