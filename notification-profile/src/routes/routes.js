@@ -129,9 +129,11 @@ routes.post('/recommendation', async (req, res) => {
             const url = `ws://localhost:8001/stream/products?email=${req.body.email}&past_ms=86400000`
             const connection = new WebSocket(url)
             connection.onmessage = e => {
-                console.log(e.data)
-                res.status(201).json({message: JSON.parse(e.data)})
+                res.status(201).json({message: JSON.parse(e.data)})               
             }
+            setTimeout(() => {
+                connection.close();
+            }, 6000)
         } else {
             res.status(400).json({ message: 'Problem in the email' });
         }
