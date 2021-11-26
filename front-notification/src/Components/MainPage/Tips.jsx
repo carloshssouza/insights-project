@@ -6,30 +6,13 @@ const Tips = () => {
   const [status, setStatus] = useState(false);
 
   const [objectServer, setObjectServer] = useState(teste);
-  // const serverURL = `ws://localhost:8001/stream/products?email=${email}`;
-  //
-  // const socket = socketIOClient(serverURL);
-  //
-  // socket.on('*', (obj) => {
-  //   setObjectServer(obj);
-  // });
+
 
   useEffect(() => {
     console.log(objectServer);
   }, [objectServer]);
 
-  // useEffect(() => {
-  //   console.log(email);
-  //   fetch('http://localhost:8000/recommendation', {
-  //     method: 'POST',
-  //     headers: {
-  //       'Content-Type': 'application/json',
-  //     },
-  //     body: JSON.stringify({email: email}),
-  //   })
-  //     .then((response) => response.json())
-  //     .then((json) => setObjectServer(json));
-  // }, [email]);
+
   useEffect(() => {
     if (email) {
       let url = `ws://localhost:8001/stream/products?email=${email}`
