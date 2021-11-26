@@ -79,6 +79,18 @@ services:
         ports:
             - 5004:5004
 
+    collector_service:
+        build:
+            context: .
+            dockerfile: api/collector/Dockerfile
+        image: collector
+        volumes:
+            - ./api/collector/pystore:/collector
+        networks:
+            - insights-network
+        ports:
+            - 5005:5005
+
     prices_service:
         build:
             context: .
@@ -236,6 +248,8 @@ volumes:
     prometheus-data:
     grafana-data:
     front-portfolio:
+    mongo-volume:
+    pystore:
 
 networks:
     insights-network:

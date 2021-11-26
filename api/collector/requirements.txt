@@ -1,0 +1,6 @@
+pandas==1.2.4
+pystore
+prometheus-client
+Flask==2.0.2
+flask-cors
+websocket-client==1.2.1
