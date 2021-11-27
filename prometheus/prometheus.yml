@@ -24,3 +24,8 @@ scrape_configs:
       - targets:
           - 'metrics_service:9998'
           - 'prices_service:8889'
+
+  - job_name: container_monitor
+    static_configs:
+      - targets:
+          - 'monitor_service:5006'
