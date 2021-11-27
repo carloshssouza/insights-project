@@ -12,6 +12,7 @@ _filter_map = {
     "Previdência Privada": "pensionFunds"
 }
 
+send_all = [["all"], ["analytics"]]
 
 class Filter:
     def __init__(self, emails, redis, messages):
@@ -24,7 +25,7 @@ class Filter:
         results = list()
         emails = list()
         cur = b'0'
-        if self.emails == ["all"]:
+        if self.emails in send_all:
             while cur:
                 cur, keys = await self.redis.scan(cur, match='user:*')
                 if keys:
@@ -35,7 +36,6 @@ class Filter:
 
         for email in emails:
             user_filter = json.loads(await self.redis.get(f"user:{email}"))
-            logger.info(user_filter)
             products = ast.literal_eval(self.messages[0]["payload"].get("products", []))
             for msg in products:
                 _filter_type = _filter_map[msg["category"]]
@@ -79,5 +79,6 @@ class Filter:
                         logger.info(f"[{message['name']}] não satisfeito por {key}")
                         break
 
-        logger.info(f"[{message['name']}] satisfaz os filtros")
+        if is_valid:
+            logger.info(f"[{message['name']}] satisfaz os filtros")
         return message if is_valid else None

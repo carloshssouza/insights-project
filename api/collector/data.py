@@ -1,7 +1,9 @@
 import pystore
 import pandas as pd
+import logging
 
-pystore.set_path('\pystore')
+logger = logging.getLogger("app")
+pystore.set_path('pystore')
 store = pystore.store("insights")
 collection = store.collection("analytics")
 

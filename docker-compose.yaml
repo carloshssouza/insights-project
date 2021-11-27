@@ -12,6 +12,17 @@ services:
         networks:
             - insights-network
 
+    redis-commander:
+        image: rediscommander/redis-commander:latest
+        depends_on:
+            - redis_db
+        environment:
+            - REDIS_HOSTS=local:redis_db:6379
+        ports:
+            - "8081:8081"
+        networks:
+            - insights-network
+
     postgres_db:
         image: postgres
         environment:
@@ -85,7 +96,7 @@ services:
             dockerfile: api/collector/Dockerfile
         image: collector
         volumes:
-            - ./api/collector/pystore:/collector
+            - /api/collector/pystore
         networks:
             - insights-network
         ports:
@@ -219,6 +230,21 @@ services:
 #            - 8000:8000
 #        networks:
 #            - insights-network
+
+    monitor_service:
+        image: monitor_service
+        build:
+            context: .
+            dockerfile: api/monitor/Dockerfile
+        ports:
+          - 5006:5006
+        volumes:
+          - ./sys/fs/cgroup/memory/docker:/docker/memory
+          - ./var/run/docker.sock:/var/run/docker.sock
+        networks:
+            - insights-network
+        environment:
+            - DOCKER_API_VERSION=1.23
 
     prometheus:
         image: prom/prometheus:v2.21.0
