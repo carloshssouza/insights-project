@@ -1,6 +1,7 @@
 import React from 'react';
 import { useNavigate } from 'react-router-dom';
 import './styles.css';
+import logo from './Insights_branco.png';
 
 const Login = () => {
   const navigate = useNavigate();
@@ -14,7 +15,7 @@ const Login = () => {
   return (
     <div className="div-login">
       <h1 className="title-login">
-        Dicas<span className="span-title-login">Investi</span>
+        <img src={logo} alt="logo" width="200" />
       </h1>
       <form className="form-login" onSubmit={onSubmit}>
         <label className="label-login" for="user">

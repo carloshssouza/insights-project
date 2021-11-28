@@ -1,6 +1,7 @@
 import React from 'react';
 import { NavLink, useNavigate } from 'react-router-dom';
 import './styles.css';
+import logo from '../Login/Insights_branco.png';
 
 const NavBar = () => {
   const navigate = useNavigate();
@@ -14,7 +15,7 @@ const NavBar = () => {
   return (
     <nav className="nav-navbar">
       <h1 className="title">
-        Dicas<span className="span-title">Investi</span>
+        <img src={logo} alt="logo" width="70" />
       </h1>
       <ul>
         <li>

@@ -7,22 +7,20 @@ const Tips = () => {
 
   const [objectServer, setObjectServer] = useState(teste);
 
-
   useEffect(() => {
     console.log(objectServer);
   }, [objectServer]);
 
-
   useEffect(() => {
     if (email) {
-      let url = `ws://localhost:8001/stream/products?email=${email}`
-      const connection = new WebSocket(url)
-      connection.onmessage = e => {
-        console.log(e.data)
-        setObjectServer(JSON.parse(e.data))
-      }
-  }  }, [email])
-
+      let url = `ws://localhost:8001/stream/products?email=${email}`;
+      const connection = new WebSocket(url);
+      connection.onmessage = (e) => {
+        console.log(e.data);
+        setObjectServer(JSON.parse(e.data));
+      };
+    }
+  }, [email]);
 
   function handleSubmit(event) {
     event.preventDefault();
@@ -33,12 +31,11 @@ const Tips = () => {
       headers: {
         'Content-Type': 'application/json',
       },
-      body: JSON.stringify({email: event.target[0].value}),
+      body: JSON.stringify({ email: event.target[0].value }),
     })
       .then((response) => response.json())
-      .then((json) => setObjectServer(json.message))
+      .then((json) => setObjectServer(json.message));
   }
-
 
   return (
     <div className="div-tips">
@@ -48,7 +45,7 @@ const Tips = () => {
 
           <label for="email">
             <span className="span-main-page">
-              Confime seu email para receber informações do produto:
+              Confime seu e-mail para receber informações do produto:
             </span>
           </label>
           <input
@@ -68,6 +65,7 @@ const Tips = () => {
             <div className="animeLeft">
               <div className="div-card-tips">
                 <h1 className="h1-tips">{item.name}</h1>
+                <h1 className="h2-tips">Opção: {item.category}</h1>
                 <h4 className="h4-tips">
                   <a href={item.link}>→ {item.source}</a>
                 </h4>
@@ -112,22 +110,16 @@ const Tips = () => {
                 </div>
 
                 <div className="div-info-tips">
-                  {item.dividend_yield && (
+                  {item.mean_daily_volume && (
                     <p>
-                      <strong>Rendimento Div.:</strong>{' '}
-                      {item.dividend_yield.toFixed(2)}
+                      <strong>Vol. médio diário:</strong>{' '}
+                      {item.mean_daily_volume.toFixed(2)}
                     </p>
                   )}
                   {item.mean_daily_return && (
                     <p>
                       <strong>Ret. médio diário:</strong>{' '}
                       {item.mean_daily_return.toFixed(2)}
-                    </p>
-                  )}
-                  {item.mean_daily_volume && (
-                    <p>
-                      <strong>Vol. médio diário:</strong>{' '}
-                      {item.mean_daily_volume.toFixed(2)}
                     </p>
                   )}
                   {item.forecast12m && (
@@ -151,6 +143,12 @@ const Tips = () => {
                     <p>
                       <strong>Retorno por mês:</strong>{' '}
                       {item.month_return.toFixed(2)}
+                    </p>
+                  )}
+                  {item.dividend_yield && (
+                    <p>
+                      <strong>Rendimento Div.: </strong>{' '}
+                      {item.dividend_yield.toFixed(2)}
                     </p>
                   )}
                 </div>

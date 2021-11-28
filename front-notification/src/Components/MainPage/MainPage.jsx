@@ -13,6 +13,8 @@ const MainPage = () => {
 
   const [email, setEmail] = useState(null);
 
+  const [response, setResponse] = useState('');
+
   function handleChangeStocks({ target }) {
     if (target.checked) {
       setStocks(true);
@@ -142,7 +144,7 @@ const MainPage = () => {
     },
   };
 
-  verificationFormionForm(
+  verificationForm(
     form,
     stocks,
     realStateFunds,
@@ -163,7 +165,7 @@ const MainPage = () => {
       body: JSON.stringify(form),
     })
       .then((response) => response.json())
-      .then((json) => console.log(json));
+      .then((json) => setResponse(json.message));
   }
 
   const segmentStocks = [
@@ -282,6 +284,7 @@ const MainPage = () => {
               value={twelvemin}
               onChange={(event) => setTwelvemin(event.target.value)}
               className="input-main-page"
+              step="0.1"
             />
 
             <label htmlFor="twelvemax">
@@ -296,6 +299,7 @@ const MainPage = () => {
               value={twelvemax}
               onChange={(event) => setTwelvemax(event.target.value)}
               className="input-main-page"
+              step="0.1"
             />
 
             <label htmlFor="dividendYieldmin">
@@ -308,6 +312,7 @@ const MainPage = () => {
               value={dividendYieldmin}
               onChange={(event) => setDividendYieldmin(event.target.value)}
               className="input-main-page"
+              step="0.1"
             />
 
             <label htmlFor="dividendYieldmax">
@@ -320,6 +325,7 @@ const MainPage = () => {
               value={dividendYieldmax}
               onChange={(event) => setDividendYieldmax(event.target.value)}
               className="input-main-page"
+              step="0.1"
             />
 
             <label htmlFor="pricemin">
@@ -332,6 +338,7 @@ const MainPage = () => {
               value={pricemin}
               onChange={(event) => setPricemin(event.target.value)}
               className="input-main-page"
+              step="0.1"
             />
 
             <label htmlFor="pricemax">
@@ -344,6 +351,7 @@ const MainPage = () => {
               value={pricemax}
               onChange={(event) => setPricemax(event.target.value)}
               className="input-main-page"
+              step="0.1"
             />
           </div>
         )}
@@ -354,7 +362,7 @@ const MainPage = () => {
             type="checkbox"
             onChange={handleChangeRealStateFunds}
           />
-          <span className="checkbox-main-page">Fundos Imoboliários</span>
+          <span className="checkbox-main-page">Fundos Imobiliários</span>
         </label>
 
         {realStateFunds && (
@@ -381,6 +389,7 @@ const MainPage = () => {
               value={twelveminRSF}
               onChange={(event) => setTwelveminRSF(event.target.value)}
               className="input-main-page"
+              step="0.1"
             />
 
             <label htmlFor="twelvemaxRSF">
@@ -395,6 +404,7 @@ const MainPage = () => {
               value={twelvemaxRSF}
               onChange={(event) => setTwelvemaxRSF(event.target.value)}
               className="input-main-page"
+              step="0.1"
             />
 
             <label htmlFor="dividendYieldminRSF">
@@ -407,6 +417,7 @@ const MainPage = () => {
               value={dividendYieldminRSF}
               onChange={(event) => setDividendYieldminRSF(event.target.value)}
               className="input-main-page"
+              step="0.1"
             />
 
             <label htmlFor="dividendYieldmaxRSF">
@@ -419,6 +430,7 @@ const MainPage = () => {
               value={dividendYieldmaxRSF}
               onChange={(event) => setDividendYieldmaxRSF(event.target.value)}
               className="input-main-page"
+              step="0.1"
             />
 
             <label htmlFor="priceminRSF">
@@ -431,6 +443,7 @@ const MainPage = () => {
               value={priceminRSF}
               onChange={(event) => setPriceminRSF(event.target.value)}
               className="input-main-page"
+              step="0.1"
             />
 
             <label htmlFor="pricemaxRSF">
@@ -443,6 +456,7 @@ const MainPage = () => {
               value={pricemaxRSF}
               onChange={(event) => setPricemaxRSF(event.target.value)}
               className="input-main-page"
+              step="0.1"
             />
           </div>
         )}
@@ -476,6 +490,7 @@ const MainPage = () => {
               value={classification}
               classNamePrefix="select"
               onChange={setClassification}
+              step="0.1"
             />
 
             <label htmlFor="deadlinemin">
@@ -488,6 +503,7 @@ const MainPage = () => {
               value={deadlinemin}
               onChange={(event) => setDeadlinemin(event.target.value)}
               className="input-main-page"
+              step="0.1"
             />
 
             <label htmlFor="deadlinemax">
@@ -500,6 +516,7 @@ const MainPage = () => {
               value={deadlinemax}
               onChange={(event) => setDeadlinemax(event.target.value)}
               className="input-main-page"
+              step="0.1"
             />
           </div>
         )}
@@ -535,6 +552,7 @@ const MainPage = () => {
               value={monthReturnminIF}
               onChange={(event) => setMonthReturnminIF(event.target.value)}
               className="input-main-page"
+              step="0.1"
             />
 
             <label htmlFor="monthReturnmaxIF">
@@ -547,6 +565,7 @@ const MainPage = () => {
               value={monthReturnmaxIF}
               onChange={(event) => setMonthReturnmaxIF(event.target.value)}
               className="input-main-page"
+              step="0.1"
             />
 
             <label htmlFor="applicationminIF">
@@ -559,6 +578,7 @@ const MainPage = () => {
               value={applicationminIF}
               onChange={(event) => setApplicationminIF(event.target.value)}
               className="input-main-page"
+              step="0.1"
             />
 
             <label htmlFor="applicationmaxIF">
@@ -571,6 +591,7 @@ const MainPage = () => {
               value={applicationmaxIF}
               onChange={(event) => setApplicationmaxIF(event.target.value)}
               className="input-main-page"
+              step="0.1"
             />
 
             <label htmlFor="admTaxminIF">
@@ -585,6 +606,7 @@ const MainPage = () => {
               value={admTaxminIF}
               onChange={(event) => setAdmTaxminIF(event.target.value)}
               className="input-main-page"
+              step="0.1"
             />
 
             <label htmlFor="admTaxmaxIF">
@@ -599,6 +621,7 @@ const MainPage = () => {
               value={admTaxmaxIF}
               onChange={(event) => setAdmTaxmaxIF(event.target.value)}
               className="input-main-page"
+              step="0.1"
             />
           </div>
         )}
@@ -624,6 +647,7 @@ const MainPage = () => {
               value={monthReturnminPF}
               onChange={(event) => setMonthReturnminPF(event.target.value)}
               className="input-main-page"
+              step="0.1"
             />
 
             <label htmlFor="monthReturnmaxPF">
@@ -636,6 +660,7 @@ const MainPage = () => {
               value={monthReturnmaxPF}
               onChange={(event) => setMonthReturnmaxPF(event.target.value)}
               className="input-main-page"
+              step="0.1"
             />
 
             <label htmlFor="applicationminPF">
@@ -648,6 +673,7 @@ const MainPage = () => {
               value={applicationminPF}
               onChange={(event) => setApplicationminPF(event.target.value)}
               className="input-main-page"
+              step="0.1"
             />
 
             <label htmlFor="applicationmaxPF">
@@ -660,6 +686,7 @@ const MainPage = () => {
               value={applicationmaxPF}
               onChange={(event) => setApplicationmaxPF(event.target.value)}
               className="input-main-page"
+              step="0.1"
             />
 
             <label htmlFor="admTaxminPF">
@@ -674,6 +701,7 @@ const MainPage = () => {
               value={admTaxminPF}
               onChange={(event) => setAdmTaxminPF(event.target.value)}
               className="input-main-page"
+              step="0.1"
             />
 
             <label htmlFor="admTaxmaxPF">
@@ -688,11 +716,14 @@ const MainPage = () => {
               value={admTaxmaxPF}
               onChange={(event) => setAdmTaxmaxPF(event.target.value)}
               className="input-main-page"
+              step="0.1"
             />
           </div>
         )}
 
         <button className="button-main-page">Enviar</button>
+
+        {response && <h4 className="response-main-page">{response}!</h4>}
       </form>
     </div>
   );

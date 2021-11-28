@@ -11,7 +11,7 @@ body {
   --type-second: 'Spectral', Georgia;
   font-family: var(--type-first);
   /* background: rgb(204, 211, 204); */
-  background: #fff;
+  background: rgb(223, 223, 223);
 }
 
 h1,

@@ -1,1 +1,27 @@
-[]
+[
+  {
+    "publication_date": "2021-11-14",
+    "category": "Ações",
+    "count": 60
+  },
+  {
+    "publication_date": "2021-11-14",
+    "category": "COE",
+    "count": 21
+  },
+  {
+    "publication_date": "2021-11-14",
+    "category": "Fundos Imobiliários",
+    "count": 51
+  },
+  {
+    "publication_date": "2021-11-14",
+    "category": "Fundos Imobiliários",
+    "count": 30
+  },
+  {
+    "publication_date": "2021-11-14",
+    "category": "Previdência Privada",
+    "count": 30
+  }
+]
