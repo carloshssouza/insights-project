@@ -1,31 +1,33 @@
 import React, { useEffect, useState } from 'react';
 import Chart from 'react-apexcharts';
-import teste from './teste.json';
-import teste2 from './teste2.json';
+
 
 const Kpi = () => {
   const [objectServer1, setObjectServer1] = useState([]);
   const [objectServer2, setObjectServer2] = useState([]);
 
   function getKpi() {
-    fetch('localhost:5005/analytics/frequency', {
+    fetch('/analytics/frequency', {
       method: 'GET',
+      headers: {
+        'Access-Control-Allow-Headers': '*'
+      }
     })
       .then((response) => response.json())
       .then((json) => setObjectServer1(json));
 
-    fetch('localhost:5005/analytics/top10', {
+    fetch('/analytics/top10', {
       method: 'GET',
+      headers: {
+        'Access-Control-Allow-Headers': '*'
+      }
     })
       .then((response) => response.json())
       .then((json) => setObjectServer2(json));
   }
 
   useEffect(() => {
-    setObjectServer1(teste); // apagar depois de conectar com api
-    setObjectServer2(teste2); // apagar depois de conectar com api
-
-    // getKpi(); // descomentar para conectar
+    getKpi(); // descomentar para conectar
   }, []);
 
   const labelsPieChart = objectServer1?.map((x) => x?.category);
