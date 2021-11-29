@@ -1,20 +1,28 @@
-import pystore
-import pandas as pd
+import pymongo
 import logging
+import pandas as pd
+
+
+mongo = pymongo.MongoClient("mongodb://admin:admin@mongo_db:27017/")
+analytics_db = mongo["analytics"]
 
 logger = logging.getLogger("app")
-pystore.set_path('pystore')
-store = pystore.store("insights")
-collection = store.collection("analytics")
 
 
 def get_data_store(collection_name):
     try:
-        df = collection.item(collection_name).to_pandas()
-    except ValueError:
-        df = pd.DataFrame()
-    return df
+        collection = analytics_db[collection_name]
+        data = collection.find({}, {'_id': False})
+        logger.info(f"GETTING ANALYTIC {data}")
+        return pd.DataFrame(data)
+    except Exception as e:
+        logger.error(e)
 
 
-def save_data_store(df, collection_name):
-    collection.write(collection_name, df, overwrite=True)
+def clean_collection(collection_name):
+    try:
+        collection = analytics_db[collection_name]
+        collection.drop()
+        return {"status": f"Collection {collection_name} cleaned"}
+    except Exception as e:
+        logger.error(e)

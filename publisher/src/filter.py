@@ -14,6 +14,7 @@ _filter_map = {
 
 send_all = [["all"], ["analytics"]]
 
+
 class Filter:
     def __init__(self, emails, redis, messages):
         self.redis = redis
@@ -52,8 +53,6 @@ class Filter:
     @staticmethod
     def filter_data(message, conditions):
         is_valid = True
-        logger.info(message)
-        logger.info(conditions)
         if not conditions:
             return message
         for key, value in conditions.items():

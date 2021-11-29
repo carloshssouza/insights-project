@@ -111,7 +111,6 @@ async def proxy_stream(
             results = await _filter.filter_products
         else:
             results = [message["payload"] for message in prepared_messages]
-        logger.info(results)
         # Send messages to client, handling (ConnectionClosed, WebSocketDisconnect) in case client has disconnected
         try:
             await ws.send_json(results)
