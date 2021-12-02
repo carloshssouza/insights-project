@@ -8,7 +8,7 @@ const MainPage = () => {
   const [stocks, setStocks] = useState(false);
   const [realStateFunds, setRealStateFunds] = useState(false);
   const [coe, setCoe] = useState(false);
-  const [investimentFunds, setInvestimentFunds] = useState(false);
+  const [investmentFunds, setinvestmentFunds] = useState(false);
   const [pensionFunds, setPensionFunds] = useState(false);
 
   const [email, setEmail] = useState(null);
@@ -39,11 +39,11 @@ const MainPage = () => {
     }
   }
 
-  function handleChangeInvestimentFunds({ target }) {
+  function handleChangeinvestmentFunds({ target }) {
     if (target.checked) {
-      setInvestimentFunds(true);
+      setinvestmentFunds(true);
     } else {
-      setInvestimentFunds(false);
+      setinvestmentFunds(false);
     }
   }
 
@@ -125,7 +125,7 @@ const MainPage = () => {
       deadline_min: deadlinemin,
       deadline_max: deadlinemax,
     },
-    investimentFunds: {
+    investmentFunds: {
       min_application_min: applicationminIF,
       min_application_max: applicationmaxIF,
       adm_tax_min: admTaxminIF,
@@ -149,7 +149,7 @@ const MainPage = () => {
     stocks,
     realStateFunds,
     coe,
-    investimentFunds,
+    investmentFunds,
     pensionFunds
   );
 
@@ -170,11 +170,14 @@ const MainPage = () => {
 
   const segmentStocks = [
     { value: 'Propriedades', label: 'Propriedades' },
+    { value: 'Telecom & Tech', label: 'Tecnologia' },
+    { value: 'Agronegócio', label: 'Agronegócio' },
     { value: 'Saúde', label: 'Saúde' },
     { value: 'Serviços Básicos', label: 'Serviços Básicos' },
     { value: 'Construção Civil', label: 'Construção Civil' },
     { value: 'Varejo', label: 'Varejo' },
     { value: 'Papel & Celulose', label: 'Papel & Celulose' },
+    { value: 'Transporte & Logística', label: 'Transporte & Logística' },
   ];
 
   const recommendationStocks = [
@@ -525,12 +528,12 @@ const MainPage = () => {
           <input
             className="checkbox-main-page"
             type="checkbox"
-            onChange={handleChangeInvestimentFunds}
+            onChange={handleChangeinvestmentFunds}
           />
           <span className="checkbox-main-page">Fundos de Investimento</span>
         </label>
 
-        {investimentFunds && (
+        {investmentFunds && (
           <div className="div-true-main-page animeLeft">
             <span className="input-true-main-page">Classificação</span>
             <Select

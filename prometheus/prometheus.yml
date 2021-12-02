@@ -18,14 +18,10 @@ scrape_configs:
           - 'advisor_service:5002'
           - 'assets_service:5003'
           - 'portfolio_service:5004'
+          - 'collector_service:5005'
 
   - job_name: metrics
     static_configs:
       - targets:
           - 'metrics_service:9998'
           - 'prices_service:8889'
-
-  - job_name: container_monitor
-    static_configs:
-      - targets:
-          - 'monitor_service:5006'

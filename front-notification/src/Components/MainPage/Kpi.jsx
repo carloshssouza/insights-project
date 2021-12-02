@@ -45,6 +45,9 @@ const Kpi = () => {
         data: seriesBarChart,
       },
     ],
+    title: {
+      text: "Distribuição de produtos por classe de ativo"
+    }
   };
 
   return (
@@ -62,6 +65,7 @@ const Kpi = () => {
         type="bar"
         height="400"
         width="600"
+        title={dataBarChart?.title}
       />
     </div>
   );

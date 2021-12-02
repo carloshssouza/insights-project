@@ -94,10 +94,10 @@ const Tips = () => {
                   )}
                   {item.deadline && (
                     <p className="number-tips">
-                      <span className="span-tips">Prazo Final: </span>
+                      <span className="span-tips">Prazo: </span>
                       {item.deadline}{' '}
                       <span style={{ fontSize: '1.2rem', paddingLeft: '3px' }}>
-                        d(s)
+                        meses(s)
                       </span>
                     </p>
                   )}
