@@ -7,6 +7,10 @@ __pycache__/
 *.so
 
 # Distribution / packaging
+.node_modules
+notification-profile/node-modules
+notification-profile/src/node-modules
+front-notification/node-modules
 .idea
 .Python
 build/

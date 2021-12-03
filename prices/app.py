@@ -61,7 +61,7 @@ def response_builder(name, series):
 
 def server_setup():
     server = grpc.server(futures.ThreadPoolExecutor(max_workers=10),
-                         interceptors=(PromServerInterceptor(),))
+                         interceptors=(PromServerInterceptor(enable_handling_time_histogram=True),))
     grpc_service.add_InfoServicer_to_server(InfoServicer(), server)
     server.add_insecure_port(f"prices_service:{prices_port}")
     start_http_server(8889)

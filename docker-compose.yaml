@@ -12,6 +12,17 @@ services:
         networks:
             - insights-network
 
+    redis-commander:
+        image: rediscommander/redis-commander:latest
+        depends_on:
+            - redis_db
+        environment:
+            - REDIS_HOSTS=local:redis_db:6379
+        ports:
+            - 8081:8081
+        networks:
+            - insights-network
+
     postgres_db:
         image: postgres
         environment:
@@ -32,6 +43,38 @@ services:
             - "16543:80"
         depends_on:
             - postgres_db
+        networks:
+            - insights-network
+
+    mongo-express:
+        image: mongo-express
+        ports:
+            - "8082:8082"
+        environment:
+            VCAP_APP_PORT: 8082
+            ME_CONFIG_BASICAUTH_USERNAME: admin
+            ME_CONFIG_BASICAUTH_PASSWORD: admin
+            ME_CONFIG_MONGODB_PORT: 27017
+            ME_CONFIG_MONGODB_ADMINUSERNAME: admin
+            ME_CONFIG_MONGODB_ADMINPASSWORD: admin
+            ME_CONFIG_MONGODB_SERVER: mongo_db
+            ME_CONFIG_OPTIONS_EDITORTHEME: ambiance
+        depends_on:
+            - mongo_db
+        links:
+            - mongo_db
+        networks:
+            - insights-network
+
+    mongo_db:
+        image: mongo
+        environment:
+            MONGO_INITDB_ROOT_USERNAME: admin
+            MONGO_INITDB_ROOT_PASSWORD: admin
+        ports:
+            - "27017:27017"
+        volumes:
+            - ./mongo-volume:/data/db
         networks:
             - insights-network
 
@@ -78,6 +121,31 @@ services:
             - insights-network
         ports:
             - 5004:5004
+
+    collector_service:
+        build:
+            context: .
+            dockerfile: api/collector/Dockerfile
+        image: collector
+        depends_on:
+            - mongo_db
+        networks:
+            - insights-network
+        ports:
+            - 5005:5005
+
+    collector_listener_service:
+        build:
+            context: .
+            dockerfile: api/collector/listener/Dockerfile
+        image: collector_listener
+        depends_on:
+            - publisher_service
+            - mongo_db
+        networks:
+            - insights-network
+        ports:
+            - 9918:9918
 
     prices_service:
         build:
@@ -166,18 +234,62 @@ services:
         networks:
             - insights-network
 
-    front_portfolio:
-        container_name: front_portfolio
-        build:
-            context: .
-            dockerfile: front-portfolio/Dockerfile
-        volumes:
-            - '.:/front-portfolio'
-            - '/front-portfolio/node_modules'
-        ports:
-            - 3001:3001
-        networks:
-            - insights-network
+#    front_portfolio:
+#        container_name: front_portfolio
+#        build:
+#            context: .
+#            dockerfile: front-portfolio/Dockerfile
+#        volumes:
+#            - '.:/front-portfolio'
+#            - '/front-portfolio/node_modules'
+#        ports:
+#            - 3001:3001
+#        networks:
+#            - insights-network
+
+#    front_notification:
+#        container_name: front_notification
+#        build:
+#            context: .
+#            dockerfile: front-notification/Dockerfile
+#        depends_on:
+#            - publisher_service
+#            - notification_profile_service
+#        volumes:
+#            - '.:/front-notification'
+#            - '/front-notification/node_modules'
+#        ports:
+#            - 3002:3002
+#        networks:
+#            - insights-network
+
+#    notification_profile_service:
+#        container_name: notification_profile
+#        build:
+#            context: .
+#            dockerfile: notification-profile/Dockerfile
+#        depends_on:
+#            - publisher_service
+#            - redis_db
+#        ports:
+#            - 8000:8000
+#        networks:
+#            - insights-network
+
+#    monitor_service:
+#        image: monitor_service
+#        build:
+#            context: .
+#            dockerfile: api/monitor/Dockerfile
+#        ports:
+#          - 5006:5006
+#        volumes:
+#          - ./sys/fs/cgroup/memory/docker:/docker/memory
+#          - ./var/run/docker.sock:/var/run/docker.sock
+#        networks:
+#            - insights-network
+#        environment:
+#            - DOCKER_API_VERSION=1.23
 
     prometheus:
         image: prom/prometheus:v2.21.0
@@ -207,6 +319,7 @@ volumes:
     prometheus-data:
     grafana-data:
     front-portfolio:
+    mongo-volume:
 
 networks:
     insights-network:

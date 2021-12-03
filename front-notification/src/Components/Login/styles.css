@@ -1,0 +1,85 @@
+.div-login {
+  display: flex;
+  align-items: center;
+  justify-content: center;
+  flex-direction: column;
+  background-color: #333333;
+  background-position: center; /* Center the image */
+  background-repeat: no-repeat; /* Do not repeat the image */
+  background-size: cover;
+  height: 100vh;
+}
+
+.title-login {
+  display: block;
+  margin-top: -90px;
+  padding-bottom: 20px;
+  color: #fff;
+  text-shadow: 0.5px 1px 2px gainsboro;
+  font-size: 2.4rem;
+}
+
+.span-title-login {
+  font-size: 2.9rem;
+  color: black;
+}
+
+.label-login {
+  text-shadow: 1px 1px 1px gainsboro;
+  color: #2c2c2c;
+  margin-left: 4px;
+  font-size: 0.8rem;
+  font-weight: bold;
+}
+
+.input-login {
+  padding: 3px;
+  padding-left: 10px;
+  margin: 3px;
+  margin-bottom: 12px;
+  width: 200px;
+  border: none;
+  background-color: gainsboro;
+  border-radius: 5px;
+  height: 30px;
+  box-shadow: 0 1px 1px rgba(0, 0, 0, 0.12), 0 1px 1px rgba(0, 0, 0, 0.24);
+  font-size: 0.8rem;
+}
+
+.input-login:hover,
+.button-login:hover {
+  transform: scale(1.05);
+  transition: 0.2s ease-in;
+}
+
+.button-login {
+  width: 200px;
+  margin: 20px 3px 5px 3px;
+  color: #fff;
+  background-color: #333;
+  border-radius: 10px;
+  height: 30px;
+  cursor: pointer;
+  font-size: 0.9rem;
+  font-weight: bold;
+  border: none;
+  box-shadow: 0 1px 1px rgba(0, 0, 0, 0.12), 0 1px 1px rgba(0, 0, 0, 0.24);
+}
+
+.button-login:hover {
+  background-color: #151515;
+}
+
+.input-login:not(:hover),
+.button-login:not(:hover) {
+  transition: 0.2s ease-in;
+}
+
+.form-login {
+  /* background-color: rgb(204, 211, 204); */
+  background-color: #fff;
+  padding: 25px;
+  border-radius: 5px;
+  box-shadow: 0 1px 3px rgba(0, 0, 0, 0.12), 0 1px 2px rgba(0, 0, 0, 0.24);
+  transition: all 0.3s cubic-bezier(0.25, 0.8, 0.25, 1);
+}

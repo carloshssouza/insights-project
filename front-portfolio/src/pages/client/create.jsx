@@ -5,7 +5,7 @@ import axios from "axios";
 import account_circle from "../../assets/ic_account_circle_white_48dp.png";
 
 import { Form, FormGroup, Label, Col, Input, Button, Row } from 'reactstrap';
-import { BsFillPersonPlusFill, BsFillPersonFill, BsFillHouseFill, BsBoxArrowInLeft } from "react-icons/bs";
+import { BsFillHouseFill, BsBoxArrowInLeft } from "react-icons/bs";
 
 class CreateClient extends React.Component {
     constructor(props) {
@@ -36,7 +36,7 @@ class CreateClient extends React.Component {
         var self = this;
         var config = {
             method: 'get',
-            url: 'http://localhost:5002/advisor/1',
+            url: 'http://localhost:5002/advisor/' + window.sessionStorage.getItem('adv_id'),
             headers: {}
         };
         axios(config)
@@ -60,45 +60,46 @@ class CreateClient extends React.Component {
     }
 
     handleSubmit(event) {
-        const result = JSON.stringify({
-            "name": this.state.name,
-            "cpf": this.state.cpf,
-            "username": this.state.username,
-            "email": this.state.email,
-            "password": this.state.password,
-            "suitability": this.state.suitability,
-            "cel": this.state.cel,
-            "address": this.state.address,
-            "city": this.state.city,
-            "state": this.state.estate,
-            "status": 1,
-            "complement": this.state.complement,
-            "zip_code": this.state.zip_code,
-            "obs": this.state.obs,
-            "advisor_id": 1 //Mudar o id do advisor depois!
-        });
-        this.state.resultado = result;
-        console.log(this.state.resultado);
-        var config = {
-            method: 'post',
-            url: 'http://localhost:5001/client/create',
-            headers: {
-                'Content-Type': 'application/json'
-            },
-            data: this.state.resultado
-        };
-
-        axios(config)
-            .then(function (response) {
-                alert('Usuário criado!');
-                window.location.replace('http://localhost:5500/advisor/home');
-            })
-            .catch(function (error) {
-                alert(error);
+        if(this.state.name == '' || this.state.username == '' || this.state.password == '' || this.state.email == '') {
+            alert("Campos marcados com * são obrigatórios");
+        }else {
+            const result = JSON.stringify({
+                "name": this.state.name,
+                "cpf": this.state.cpf,
+                "username": this.state.username,
+                "email": this.state.email,
+                "password": this.state.password,
+                "suitability": this.state.suitability,
+                "cel": this.state.cel,
+                "address": this.state.address,
+                "city": this.state.city,
+                "state": this.state.estate,
+                "status": 1,
+                "complement": this.state.complement,
+                "zip_code": this.state.zip_code,
+                "obs": this.state.obs,
+                "advisor_id": parseInt(window.sessionStorage.getItem('adv_id')) //Mudar o id do advisor depois!
             });
-        // this.req();
-        // JSON.stringify(result);
-        // alert(`JSON: ${result}`);
+            this.state.resultado = result;
+            console.log(this.state.resultado);
+            var config = {
+                method: 'post',
+                url: 'http://localhost:5001/client/create',
+                headers: {
+                    'Content-Type': 'application/json'
+                },
+                data: this.state.resultado
+            };
+    
+            axios(config)
+                .then(function (response) {
+                    alert('Usuário criado!');
+                    window.location.replace('http://localhost:5500/advisor/home');
+                })
+                .catch(function (error) {
+                    alert(error);
+                });
+        }
         event.preventDefault();
     }
 
@@ -111,13 +112,12 @@ class CreateClient extends React.Component {
                     <div className="Rectangle-3">
                         <br />
                         <div className="Ellipse-1"><br />
-                            <BsFillPersonFill size={40} />
                         </div>
                         <p className="Txt-1">
                             {this.state.adv.name} <br />
                             {this.state.adv.email} <br />
                             {this.state.adv.city} - {this.state.adv.state} <br />
-                            {this.state.adv.cvm_code}
+                            CVM: {this.state.adv.cvm_code}
                         </p>
                     </div>
                     <hr />
@@ -155,7 +155,7 @@ class CreateClient extends React.Component {
                                     for="name"
                                     sm={2}
                                 >
-                                    Nome
+                                    Nome*
                                 </Label>
                                 <Col sm={10}>
                                     <Input
@@ -189,7 +189,7 @@ class CreateClient extends React.Component {
                                     for="username"
                                     sm={2}
                                 >
-                                    Usuário
+                                    Usuário*
                                 </Label>
                                 <Col sm={10}>
                                     <Input
@@ -206,7 +206,7 @@ class CreateClient extends React.Component {
                                     for="email"
                                     sm={2}
                                 >
-                                    Email
+                                    Email*
                                 </Label>
                                 <Col sm={10}>
                                     <Input
@@ -223,30 +223,13 @@ class CreateClient extends React.Component {
                                     for="password"
                                     sm={2}
                                 >
-                                    Senha
+                                    Senha*
                                 </Label>
                                 <Col sm={10}>
                                     <Input
                                         id="password"
                                         name="password"
                                         type="password"
-                                        onChange={this.handleInputChange.bind(this)}
-                                    />
-                                </Col>
-                            </FormGroup>
-                            <FormGroup row>
-                                <Label
-                                    for="suitability"
-                                    sm={2}
-                                >
-                                    Suitability
-                                </Label>
-                                <Col sm={10}>
-                                    <Input
-                                        id="suitability"
-                                        name="suitability"
-                                        placeholder="suitability"
-                                        type="text"
                                         onChange={this.handleInputChange.bind(this)}
                                     />
                                 </Col>
@@ -321,23 +304,6 @@ class CreateClient extends React.Component {
                             </FormGroup>
                             <FormGroup row>
                                 <Label
-                                    for="status"
-                                    sm={2}
-                                >
-                                    Status
-                                </Label>
-                                <Col sm={10}>
-                                    <Input
-                                        id="status"
-                                        name="status"
-                                        placeholder=""
-                                        type="text"
-                                        onChange={this.handleInputChange.bind(this)}
-                                    />
-                                </Col>
-                            </FormGroup>
-                            <FormGroup row>
-                                <Label
                                     for="complement"
                                     sm={2}
                                 >
@@ -387,7 +353,7 @@ class CreateClient extends React.Component {
                                     />
                                 </Col>
                             </FormGroup>
-
+                            *Campos obrigatórios
                             <div className="cb">
                                 <Button secondary>
                                     Enviar

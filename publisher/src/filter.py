@@ -6,11 +6,14 @@ logger = logging.getLogger("filter")
 
 _filter_map = {
     "Ações": "stocks",
-    "Fundos Imobiliários": "real_state",
+    "Fundos Imobiliários": "realStateFunds",
     "COE": "coe",
-    "Fundos de Investimento": "funds",
-    "Previdência Privada": "pension_funds"
+    "Fundos de Investimento": "investmentFunds",
+    "Previdência Privada": "pensionFunds"
 }
+
+send_all = [["all"], ["analytics"]]
+limits = ("_max", "_min")
 
 
 class Filter:
@@ -24,7 +27,7 @@ class Filter:
         results = list()
         emails = list()
         cur = b'0'
-        if self.emails == ["all"]:
+        if self.emails in send_all:
             while cur:
                 cur, keys = await self.redis.scan(cur, match='user:*')
                 if keys:
@@ -38,35 +41,54 @@ class Filter:
             products = ast.literal_eval(self.messages[0]["payload"].get("products", []))
             for msg in products:
                 _filter_type = _filter_map[msg["category"]]
-                is_desired = user_filter.get(_filter_type)
-                if not is_desired:
+                is_desired = user_filter.get(_filter_type, False)
+                if isinstance(is_desired, bool):
                     continue
                 result = self.filter_data(msg, user_filter[_filter_type])
                 if result:
                     result["email"] = email
                     results.append(result)
+            logger.info(f"----- {len(results)} FILTRADOS PARA O EMAIL {email} -----")
         return results
 
     @staticmethod
     def filter_data(message, conditions):
         is_valid = True
+        if not conditions:
+            return message
         for key, value in conditions.items():
-            if key in message:
+            if "_min" in key or "_max" in key:
+                cpk = key.split("_")
+                cpk.pop(-1)
+                cpk = "_".join(cpk)
+            else:
+                cpk = key
+            if cpk in message:
+                logger.info(f"CAMPO: {key}")
+                logger.info(f"FILTRO: {message[cpk]}")
+                logger.info(f"VALOR: {value}")
                 if isinstance(value, list):
-                    if message[key] not in value:
+                    if message[cpk] not in value:
                         is_valid = False
+                        logger.info(f"[{message['name']}] não satisfeito por {key}")
                         break
-                elif "min" in key:
-                    if float(message[key]) < value:
+                elif "_min" in key:
+                    if float(message[cpk]) < float(value):
                         is_valid = False
+                        logger.info(f"[{message['name']}] não satisfeito por {key}")
                         break
-                elif "max" in key:
-                    if float(message[key]) > value:
+                elif "_max" in key:
+                    if float(message[cpk]) > float(value):
                         is_valid = False
+                        logger.info(f"[{message['name']}] não satisfeito por {key}")
                         break
                 else:
-                    if message[key] != value:
+                    if str(message[cpk]) != str(value):
                         is_valid = False
+                        logger.info(f"[{message['name']}] não satisfeito por {key}")
                         break
-
+            else:
+                return None
+        if is_valid:
+            logger.info(f"[{message['name']}] satisfaz os filtros")
         return message if is_valid else None

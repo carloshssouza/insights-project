@@ -35,9 +35,9 @@ def on_close(ws, close_status_code, close_msg):
 
 
 if __name__ == "__main__":
-    put_mock_redis()
+    # put_mock_redis()
     websocket.enableTrace(True)
-    ws = websocket.WebSocketApp("ws://localhost:8001/stream/products?email=lucasblazzi@hotmail.com",
+    ws = websocket.WebSocketApp("ws://localhost:8001/stream/products?email=lucasblazzi@hotmail.com&past_ms=86400000",
                               on_message=on_message,
                               on_error=on_error,
                               on_close=on_close)

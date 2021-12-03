@@ -50,7 +50,7 @@ CREATE TABLE portfolio(
 
 CREATE TABLE product(
     key SERIAL PRIMARY KEY,
-    id VARCHAR(10) PRIMARY KEY,
+    id VARCHAR(10),
     proportion FLOAT NOT NULL,
     amount FLOAT NOT NULL,
 	portfolio_id INTEGER NOT NULL,

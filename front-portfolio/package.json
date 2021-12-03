@@ -18,10 +18,12 @@
     "react-scripts": "4.0.3",
     "reactjs-popup": "^2.0.5",
     "reactstrap": "^9.0.0",
+    "sweetalert2": "^11.2.1",
+    "sweetalert2-react-content": "^4.2.0",
     "web-vitals": "^1.1.2"
   },
   "scripts": {
-    "start": "PORT=3001 react-scripts start",
+    "start": "SET PORT=5500 && react-scripts start",
     "build": "react-scripts build",
     "test": "react-scripts test",
     "eject": "react-scripts eject"

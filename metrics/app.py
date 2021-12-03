@@ -96,7 +96,7 @@ def compose_df(data):
 
 def server_setup():
     server = grpc.server(futures.ThreadPoolExecutor(max_workers=10),
-                         interceptors=(PromServerInterceptor(),))
+                         interceptors=(PromServerInterceptor(enable_handling_time_histogram=True),))
     grpc_service.add_MetricsServicer_to_server(MetricsServicer(), server)
     server.add_insecure_port(f"metrics_service:{metrics_port}")
     start_http_server(9998)

@@ -54,27 +54,7 @@ def get_products():
 
 def publish_products():
     products = get_products()
-    import json
     client = redis.Redis(host="redis_db", port=6379)
-    client.delete("user:leblazzi@hotmail.com")
-    mock = {
-        "email": "lucasblazzi@hotmail.com",
-        "stocks": {
-            "segment": ["Propriedades", "Agronegócio", "Varejo"]
-        },
-        "funds": {
-            "adm_tax_min": 0,
-            "adm_tax_max": 0.4
-          },
-        "real_state": {
-            "segment": ["Lajes corporativas", "Logístico"],
-            "dividend_yield_min": 0.001
-        },
-        "coe": {
-            "classifcation": "Rating AAA(bra)"
-        }
-    }
-    client.set(f"user:lucasblazzi@hotmail.com", json.dumps(mock))
     client.xadd("products", {"products": str(products)})
     return products
 

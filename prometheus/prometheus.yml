@@ -18,6 +18,7 @@ scrape_configs:
           - 'advisor_service:5002'
           - 'assets_service:5003'
           - 'portfolio_service:5004'
+          - 'collector_service:5005'
 
   - job_name: metrics
     static_configs:

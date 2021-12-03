@@ -30,7 +30,7 @@ class Product:
         return base | coe
 
     def stock_rt_builder(self, base):
-        target_price = sub(r'[^\d.]', '', self.product.get("Preço Alvo", "-1"))
+        target_price = sub(r'[^\d,]', '', self.product.get("Preço Alvo", "-1"))
         stock = {
             "ticker": str(self.product.get("ticker", "")),
             "target_price": float(target_price.replace(",", ".")) if isinstance(target_price, str)
@@ -46,12 +46,12 @@ class Product:
         return base | fixed_income
 
     def investment_fund_builder(self, base):
-        min_app = sub(r'[^\d.]', '', self.product.get("Aplic. Mín.", "-1"))
-        month_ret = sub(r'[^\d.]', '', self.product.get("Rent. Mês", "-1"))
+        min_app = sub(r'[^\d,]', '', self.product.get("Aplic. Mín.", "-1"))
+        month_ret = sub(r'[^\d,]', '', self.product.get("Rent. Mês", "-1"))
         investment_fund = {
             "min_application": float(min_app.replace(".", "").replace(",", ".")) if min_app and min_app != "N/D" else -1,
-            "adm_tax": float(sub(r'[^\d.]', '', self.product.get("Taxa Adm. (a.a.)").replace(",", "."))),
-            "redemption": self.product.get("Cotização de Resgate"),
+            "adm_tax": float(sub(r'[^\d,]', '', self.product.get("Taxa Adm. (a.a.)").replace(",", ".")))/100,
+            "redemption": int(re.findall(r'\d+', self.product.get("Cotização de Resgate"))[0]),
             "classification": str(self.product.get("Classificação XP")),
             "month_return": float(month_ret.replace(",", ".")) if month_ret and month_ret != "N/D" else -1,
         }
@@ -59,8 +59,8 @@ class Product:
 
     def pension_fund_builder(self, base):
         month_ret = self.product.get("Rent. Mês").replace(",", ".")
-        adm_tax = sub(r'[^\d.]', '', self.product.get("Taxa Adm.", "-1"))
-        min_app = sub(r'[^\d.]', '', self.product.get("Aplic. Mín.", "-1"))
+        adm_tax = sub(r'[^\d,]', '', self.product.get("Taxa Adm.", "-1"))
+        min_app = sub(r'[^\d,]', '', self.product.get("Aplic. Mín.", "-1"))
         pension_fund = {
             "min_application": float(min_app.replace(".", "").replace(",", ".")) if min_app and min_app != "N/D" else -1,
             "adm_tax": float(adm_tax.replace(",", ".")) if adm_tax and adm_tax != "N/D" else -1,

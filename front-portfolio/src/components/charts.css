@@ -10,5 +10,19 @@
     text-align: justify;
     margin: 10px;
     margin-right: 20px;
+    margin-top: 3em;
+    color: white;
+}
+
+.buss-logo {
+    display: block;
+    margin-left: auto;
+    margin-right: auto;
+    width: 25%;
+}
+
+.card-input-field {
+    margin-right: 10vw;
+    margin-left: 10vw;
     color: white;
 }

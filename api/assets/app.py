@@ -44,7 +44,7 @@ def assets_list():
     graphs["c"].inc()
     start = time.time()
     try:
-        assets = list_assets()
+        assets = sorted(list_assets())
         response = jsonify(assets)
         graphs["h"].observe(time.time() - start)
         return response
