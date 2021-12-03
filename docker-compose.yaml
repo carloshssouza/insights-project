@@ -19,7 +19,7 @@ services:
         environment:
             - REDIS_HOSTS=local:redis_db:6379
         ports:
-            - "8082:8082"
+            - 8081:8081
         networks:
             - insights-network
 
@@ -49,8 +49,9 @@ services:
     mongo-express:
         image: mongo-express
         ports:
-            - 8081:8081
+            - "8082:8082"
         environment:
+            VCAP_APP_PORT: 8082
             ME_CONFIG_BASICAUTH_USERNAME: admin
             ME_CONFIG_BASICAUTH_PASSWORD: admin
             ME_CONFIG_MONGODB_PORT: 27017

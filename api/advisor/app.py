@@ -132,7 +132,8 @@ def advisor_login():
         response = "User not found"
         _input = request.get_json()
         advisor = Advisor.query.filter(Advisor.email == _input["email"],
-                                       Advisor.password == _input["password"]).first()
+                                       Advisor.password == _input["password"],
+                                       Advisor.status == 1).first()
         if advisor:
             response = {"id": advisor.id}
         graphs["h"].observe(time.time() - start)

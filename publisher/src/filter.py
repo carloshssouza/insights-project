@@ -13,6 +13,7 @@ _filter_map = {
 }
 
 send_all = [["all"], ["analytics"]]
+limits = ("_max", "_min")
 
 
 class Filter:
@@ -56,28 +57,38 @@ class Filter:
         if not conditions:
             return message
         for key, value in conditions.items():
-            if key in message:
+            if "_min" in key or "_max" in key:
+                cpk = key.split("_")
+                cpk.pop(-1)
+                cpk = "_".join(cpk)
+            else:
+                cpk = key
+            if cpk in message:
+                logger.info(f"CAMPO: {key}")
+                logger.info(f"FILTRO: {message[cpk]}")
+                logger.info(f"VALOR: {value}")
                 if isinstance(value, list):
-                    if message[key] not in value:
+                    if message[cpk] not in value:
                         is_valid = False
                         logger.info(f"[{message['name']}] não satisfeito por {key}")
                         break
-                elif "min" in key:
-                    if float(message[key]) < value:
+                elif "_min" in key:
+                    if float(message[cpk]) < float(value):
                         is_valid = False
                         logger.info(f"[{message['name']}] não satisfeito por {key}")
                         break
-                elif "max" in key:
-                    if float(message[key]) > value:
+                elif "_max" in key:
+                    if float(message[cpk]) > float(value):
                         is_valid = False
                         logger.info(f"[{message['name']}] não satisfeito por {key}")
                         break
                 else:
-                    if message[key] != value:
+                    if str(message[cpk]) != str(value):
                         is_valid = False
                         logger.info(f"[{message['name']}] não satisfeito por {key}")
                         break
-
+            else:
+                return None
         if is_valid:
             logger.info(f"[{message['name']}] satisfaz os filtros")
         return message if is_valid else None

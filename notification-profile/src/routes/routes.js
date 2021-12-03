@@ -104,13 +104,6 @@ routes.post("/registration", async (req, res) => {
             data.pensionFunds = pensionFunds
         }
 
-        for (let key in data) {
-            console.log(key)
-            console.log(data[key])
-            if (JSON.stringify(data[key]) === '{}') {
-                delete data[key]
-            }
-        }
         redisClient.set(`user:${email}`, JSON.stringify(data));
         console.log(`user:${email}`)
         console.log(data)
