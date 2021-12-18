@@ -344,18 +344,6 @@ const MainPage = () => {
               step="0.1"
             />
 
-            <label htmlFor="pricemax">
-              <span className="input-true-main-page">Preço Máximo</span>
-            </label>
-            <input
-              id="pricemax"
-              name="pricemax"
-              type="number"
-              value={pricemax}
-              onChange={(event) => setPricemax(event.target.value)}
-              className="input-main-page"
-              step="0.1"
-            />
           </div>
         )}
 

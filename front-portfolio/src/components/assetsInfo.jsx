@@ -11,40 +11,58 @@ const AssetsInfo = ({ company, pf_id }) => {
 
     function handleRes(data) {
         //Zerar as variáveis
-        setHistoric([]);
-        setBusiness([]);
-        setValues([]);
-        setDatetimes([]);
+        // setHistoric([]);
+        // setBusiness([]);
+        // setValues([]);
+        // setDatetimes([]);
     
 
-        console.log("DATA: " + data[0]);
-        console.log("Info: " + data[0].info.longName);
+        // console.log("DATA: " + data[0]);
+        // console.log("Info: " + data[0].info.longName);
 
         //Colhe os dados históricos e os dados da empresa
         setHistoric(data[0].historic);
         setBusiness(data[0].info);
-        console.log("Hs.: " + historic[0]);
-        console.log("-----------------------------------------------------------------");
+        console.log("Data Info: " + data[0].info);
+        // console.log("Hs.: " + historic[0].date);
+        // console.log("-----------------------------------------------------------------");
         //Separa os dados históricos em valores e datas
-        historic.map((e) => {
-            setValues(oldValues => [...oldValues, e.close.toFixed(2)]);
+        var _close = [];
+        historic.forEach((e) => {
+            _close.push(e.close.toFixed(2));
+            console.log(e.close.toFixed(2));
+        })
+        // historic.map((e) => {
+        //     _close.push(e.close.toFixed(2));
+        //     // setValues(oldValues => [...oldValues, e.close.toFixed(2)]);
+        //     // setDatetimes(oldDt => [...oldDt, e.date]);
+        // });
+        var _date = [];
+        historic.forEach((e) => {
+            _date.push(e.date);
+            console.log(e.date)
+            // setValues(oldValues => [...oldValues, e.close.toFixed(2)]);
             // setDatetimes(oldDt => [...oldDt, e.date]);
         });
-        historic.map((e) => {
-            // setValues(oldValues => [...oldValues, e.close.toFixed(2)]);
-            setDatetimes(oldDt => [...oldDt, e.date]);
-        });
+
+        setValues(_close);
+        setDatetimes(_date);
 
         //Um monte de console.log não tão necessário, usados por enquanto, para os testes
-        console.log("Date Type " + typeof (historic[0].date));
-        console.log("Close Type " + typeof (historic[0].close));
-        console.log("VAL.: " + values + ' ' + Array.isArray(values));
-        console.log("-----------------------------------------------------------------");
-        console.log("Dt.: " + datetimes);
-        console.log("-----------------------------------------------------------------");
+        // console.log("Date Type " + typeof (historic[0].date));
+        // console.log("Close Type " + typeof (historic[0].close));
+        // console.log("VAL.: " + values + ' ' + Array.isArray(values));
+        // console.log("-----------------------------------------------------------------");
+        // console.log("Dt.: " + datetimes);
+        // console.log("-----------------------------------------------------------------");
     }
 
     useEffect(() => {
+        setHistoric([]);
+        setBusiness([]);
+        setValues([]);
+        setDatetimes([]);
+
         const req = async () => {
 
             console.log("SYMBOLS: " + company);
@@ -61,11 +79,18 @@ const AssetsInfo = ({ company, pf_id }) => {
                 data: data
             };
 
-            axios(config)
-                .then((response) => handleRes(response.data))
-                .catch(function (error) {
-                    console.log(error);
-                });
+            let res = await axios(config)
+                // .then((response) => {
+                //     console.log(typeof(response.data));
+                //     return response.data
+                // })
+                // .catch(function (error) {
+                //     console.log(error);
+                //     return error;
+                // });
+
+            console.log("\n\nRES: \n" + res.data);
+            handleRes(res.data);
         }
 
         req();

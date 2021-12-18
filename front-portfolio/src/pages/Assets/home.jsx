@@ -6,6 +6,7 @@ import { Col, Row, Dropdown, DropdownToggle, DropdownMenu, DropdownItem } from '
 import axios from "axios";
 import { BsFillHouseFill, BsBoxArrowInLeft, BsCurrencyDollar } from "react-icons/bs";
 import { withRouter } from 'react-router-dom';
+import LineChart from "../../components/line";
 
 
 class AssetsHome extends React.Component {
@@ -16,7 +17,11 @@ class AssetsHome extends React.Component {
             open: false,
             selected: 'Selecione',
             adv: '',
-            pf_id: 0,
+            pfId: 0,
+            company: '',
+            info: {},
+            dates: [],
+            closes: []
         };
     }
 
@@ -24,9 +29,19 @@ class AssetsHome extends React.Component {
         this.setState({ selected: value });
     }
 
-    componentDidMount() {
+    async componentDidMount() {
         var self = this;
-        this.setState({ pf_id: parseInt(this.props.location.state.pf_id) })
+        try {
+            self.setState({
+                pfId: self.props.location.state.pf_id,
+                company: self.props.location.state.company,
+                info: self.props.location.state.info,
+                dates: self.props.location.state.dates,
+                closes: self.props.location.state.closes,
+            })
+        } catch(error) {
+            console.error();
+        }
 
         //Request dos dados do card do advisor
         var config2 = {
@@ -58,13 +73,7 @@ class AssetsHome extends React.Component {
     };
 
     render() {
-        let assets;
-        var selectedBuss = this.state.selected;
-        if (selectedBuss != 'Selecione') {
-            console.log(this.state.selected);
-            let res = [this.state.selected];
-            assets = <AssetsInfo company={res} pf_id={this.state.pf_id}/>
-        }
+
         return (
             <>
                 {/* Retangle-2 = Sidebar */}
@@ -116,10 +125,10 @@ class AssetsHome extends React.Component {
 
                 <div className="Rectangle-1">
                     <div className='title'>
-                        <h1>Assets</h1>
+                        <h1>Ativo</h1>
                     </div>
                     <div>
-                        <Row>
+                        {/* <Row>
                             <h6 className="Txt-1">Empresas:</h6>
                             <Dropdown isOpen={this.state.open} toggle={() => {
                                 this.state.open == true
@@ -130,14 +139,16 @@ class AssetsHome extends React.Component {
                                     {this.state.selected}
                                 </DropdownToggle>
                                 <DropdownMenu container="body">
-                                    {this.state.sym.map((item) => <DropdownItem onClick={() => this.handleChangeDropdown(item)}>{item}</DropdownItem>
+                                    {this.state.sym.sort().map((item) => <DropdownItem onClick={() => this.handleChangeDropdown(item)}>{item}</DropdownItem>
                                     )}
                                 </DropdownMenu>
                             </Dropdown>
-                        </Row>
+                        </Row> */}
                     </div>
+                    <div style={{marginTop: "10vh"}}>
 
-                    {assets}
+                        <LineChart closes={this.state.closes} dates={this.state.dates} infos={this.state.info} company={this.state.company} portifolio={this.state.pfId} />
+                    </div>
 
                 </div>
             </>

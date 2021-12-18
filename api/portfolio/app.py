@@ -68,7 +68,8 @@ def portfolio_advisor_list(id_):
     start = time.time()
     try:
         response = list()
-        portfolios = Portfolio.query.filter_by(advisor_id=id_)
+        portfolios = Portfolio.query.filter(Portfolio.advisor_id == id_,
+                                            Portfolio.status == 1)
         for portfolio in portfolios:
             response.append(parse_portfolio(portfolio))
         graphs["h"].observe(time.time() - start)
@@ -133,11 +134,10 @@ def portfolio_remove(id_):
     graphs["c"].inc()
     start = time.time()
     try:
-        portfolio = Portfolio.query.filter_by(id=id_).update(dict(status=0))
+        Portfolio.query.filter_by(id=id_).update(dict(status=0))
         db.session.commit()
-        response = jsonify(parse_portfolio(portfolio))
         graphs["h"].observe(time.time() - start)
-        return response
+        return 1
     except Exception as e:
         graphs["e"].inc()
         return str(e)
