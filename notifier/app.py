@@ -93,7 +93,6 @@ if __name__ == "__main__":
                                 on_error=on_error,
                                 on_close=on_close)
 
-
     while True:
         try:
             ws.run_forever()

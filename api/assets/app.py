@@ -7,7 +7,6 @@ import prometheus_client
 from prometheus_client import Counter, Histogram
 import time
 
-
 app = Flask(__name__)
 cors = CORS(app)
 app.config['CORS_HEADERS'] = 'Content-Type'

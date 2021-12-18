@@ -78,6 +78,8 @@ rgba(33,33,33,255) */
     height: calc(9vh);
     border-radius: 10px;
     justify-content: space-between;
+    align-items: flex-end;
+    align-content: flex-start;
 }
 
 .card-icons-but {
@@ -88,7 +90,8 @@ rgba(33,33,33,255) */
 }
 
 .space-between>div:nth-child(3) {
-    margin-left: 40vw;
+    margin-left: 60%;
+    /* 40vw para telas maiores  */
     position: absolute;
     align-self: center;
 }
