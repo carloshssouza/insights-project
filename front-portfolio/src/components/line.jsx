@@ -6,17 +6,17 @@ import { Line } from 'react-chartjs-2';
 import { Row, Col, Form, FormGroup, Label, Input, Button } from 'reactstrap';
 import axios from 'axios';
 
-function handleSubmit(am, p, c, pf) {
-    console.log('{"id": "' + c + '", "proportion": ' + p + ', "amount": ' + am + '}');
+async function handleSubmit(event, am, p, c, pf) {
+    console.log('"portfolio_id": ' + pf + '{,"id": "' + c + '", "proportion": ' + p + ', "amount": ' + am + '}');
     var res = JSON.stringify({
         "portfolio_id": pf,
         "products": [
             {
-              "id": c,
-              "proportion": (p/100),
-              "amount": parseFloat(am)
+                "id": c,
+                "proportion": (p / 100),
+                "amount": parseFloat(am)
             }
-          ]
+        ]
     });
     console.log("RES " + res);
     var config = {
@@ -30,14 +30,20 @@ function handleSubmit(am, p, c, pf) {
 
     axios(config)
         .then(function (response) {
-            console.log(response)
-            alert('Ativo adicionado!');
-            window.location.reload();
+            console.log("Assets " + response.data);
+            if (response.data == "Products Added") {
+                alert('Ativo adicionado!\n');
+                window.location.replace('http://localhost:5500/portifolio/home');
+            } else {
+                alert('Algo inesperado ocorreu!\n Redirecionando...')
+                window.location.replace('http://localhost:5500/portifolio/home');
+            }
         })
         .catch(function (error) {
             alert(error);
         });
 
+    event.preventDefault();
     // return 'a';
 }
 
@@ -95,6 +101,15 @@ const options = {
 
 const LineChart = ({ closes, dates, infos, company, portifolio }) => {
 
+    console.log(
+        '___________________________CHART_____________________________\n'
+        + 'Closes: ' + closes + '\n'
+        + 'Dates: ' + dates + '\n'
+        + 'Company: ' + company + '\n'
+        + 'Portif: ' + portifolio + '\n'
+        + '___________________________CHART_____________________________'
+    )
+
     const data = buildData(closes, dates);
     const [amounts, setAmounts] = useState(1.0);
     const [propt, setPropt] = useState(1.0);
@@ -118,7 +133,7 @@ const LineChart = ({ closes, dates, infos, company, portifolio }) => {
                     </Col>
                 </Row>
                 <Col sm={8} className='card-input-field'>
-                    <Form onSubmit={(e) => handleSubmit(amounts, propt, company[0], portifolio)}>
+                    <Form onSubmit={(e) => handleSubmit(e, amounts, propt, company, portifolio)}>
                         <FormGroup row>
                             <Label
                                 for="amounts"

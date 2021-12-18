@@ -14,3 +14,5 @@ RUN python -m grpc_tools.protoc -I ../proto --python_out=. \
 EXPOSE 9999
 
 ENTRYPOINT [ "python", "-u", "app.py" ]
+
+

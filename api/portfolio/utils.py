@@ -50,3 +50,4 @@ def send_notifications(portfolio, clients):
             client.xadd("portfolio", message_encoder(_portfolio))
     except Exception as e:
         raise e
+

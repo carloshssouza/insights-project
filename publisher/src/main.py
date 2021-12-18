@@ -70,19 +70,15 @@ async def proxy_stream(
     email: str = None,
 ):
     await ws.accept()
-    # Create redis connection with aioredis.create_redis
     redis = await aioredis.create_redis("redis://redis_db:6379")
 
-    # Loop for as long as client is connected and our reads don't time out, sending messages to client over websocket
     while True:
-        # Limit max_frequency of messages read by constructing our own latest_id
+
         to_read_id = latest_id
         if max_frequency is not None and latest_id is not None:
             ms_to_wait = 1000 / (max_frequency or 1)
             ts = int(latest_id.split("-")[0])
             to_read_id = f"{ts + max(0, round(ms_to_wait))}"
-
-        # Call read_from_stream, and return if it raises an exception
         messages: List[Message]
         try:
             messages = await read_from_stream(redis, stream, to_read_id, past_ms, last_n)
